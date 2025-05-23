@@ -1,0 +1,22 @@
+[
+    {
+        "title": "The High Price of Survival: Unpacking America’s Drug Cost Crisis",
+        "summary": "Dive deep into the complex factors driving high prescription drug prices and the challenges facing local pharmacies in the United States.",
+        "url": "resources/drug_pricing_spa_from_blog_v4.html"
+    },
+    {
+        "title": "Understanding PBMs: The Hidden Middlemen",
+        "summary": "A detailed look at how Pharmacy Benefit Managers operate and their impact on drug costs and pharmacy viability. This article provides a deeper dive into the opaque practices of PBMs.",
+        "url": "resources/pbm_deep_dive.html"
+    },
+    {
+        "title": "The Future of Community Pharmacies",
+        "summary": "Exploring innovative models and policy changes that could help revitalize local pharmacies and ensure continued access to vital healthcare services in communities.",
+        "url": "resources/pharmacy_future.html"
+    },
+    {
+        "title": "Global Drug Pricing: A Comparative Analysis",
+        "summary": "Compare drug pricing strategies and outcomes across different countries to understand international disparities and potential solutions.",
+        "url": "resources/global_pricing_analysis.html"
+    }
+]
