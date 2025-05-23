@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Drug Pricing Insights - Understanding Healthcare Costs</title>
+    <meta name="description" content="Discover insights into drug pricing, pharmacy challenges, and healthcare costs in the US. Explore our interactive guide to understand the high price of survival.">
+    <meta name="keywords" content="drug pricing, healthcare costs, pharmacy, PBMs, patient care, medical costs, affordable healthcare">
+    
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preload" href="resources/drug_pricing_spa_from_blog_v4.html" as="document">
+    <link rel="preload" href="js/articles.json" as="fetch" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="hero-section">
+        <div class="carousel-container">
+            <div class="carousel-slide-wrapper" id="carouselSlideWrapper">
+                <div class="loading-spinner-container">
+                    <div class="loading-spinner"></div>
+                    <p class="text-sm text-neutral-600 mt-2">Loading featured articles...</p>
+                </div>
+            </div>
+            <button id="prevSlide" class="carousel-nav-button left-arrow" aria-label="Previous Slide" style="display: none;">&#8249;</button>
+            <button id="nextSlide" class="carousel-nav-button right-arrow" aria-label="Next Slide" style="display: none;">&#8250;</button>
+            <div class="carousel-indicators" id="carouselIndicators" style="display: none;">
+                </div>
+        </div>
+        <a href="#articlesGridSection" class="cta-button">
+            Explore All Articles
+        </a>
+    </div>
+
+    <div class="section-container" id="articlesGridSection">
+        <h2 class="section-title">Explore Our Insights</h2>
+        <div class="articles-grid" id="articlesGridContent">
+            <div class="loading-spinner-container full-grid-width">
+                <div class="loading-spinner"></div>
+                <p class="text-sm text-neutral-600 mt-2">Loading articles...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-container" id="about-author">
+        <h2 class="section-title">About the Author</h2>
+        <p class="bio-text">
+            Sungjoon Jun, PharmD, is a dedicated healthcare professional with a passion for demystifying complex pharmaceutical and healthcare economics. With a Doctor of Pharmacy degree and years of experience in the field, Sungjoon combines clinical knowledge with a keen understanding of market dynamics to provide clear, insightful analysis on critical issues like drug pricing and pharmacy accessibility. His work aims to empower patients and healthcare stakeholders with the knowledge needed to navigate the evolving healthcare landscape.
+        </p>
+    </div>
+
+    <footer class="text-center py-8 text-sm text-neutral-600 bg-white mt-8 shadow-inner">
+        <p>&copy; <span id="currentYear"></span> Sungjoon Jun. All rights reserved. Information for educational purposes only.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
