@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The High Price of Survival: Unpacking America’s Drug Cost Crisis</title>
+    <meta name="description" content="Explore why prescription drugs are expensive in the US, the decline of neighborhood pharmacies, the role of PBMs, and government efforts. Understand the impact on patient care and find solutions for affordable healthcare.">
+    <meta name="keywords" content="drug pricing, prescription costs, pharmacy benefit managers, PBMs, neighborhood pharmacies, pharmacy deserts, healthcare costs, Medicare negotiation, Inflation Reduction Act, patient care, Sungjoon Jun PharmD">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices:
+        - US vs. OECD Prices (Blog Table 1): Goal: Compare. Viz: Interactive Bar Chart (Chart.js). Interaction: Buttons to switch data views. Justification: Dynamic visual comparison of international prices.
+        - Key Cost Factors (Blog text): Goal: Inform. Presentation: Accordion (HTML/CSS/JS). Interaction: Click to expand/collapse. Justification: Organizes detailed explanations concisely.
+        - Pharmacy Closure Rates (Blog Table 3): Goal: Show trend. Viz: Grouped Bar Chart (Chart.js). Interaction: Tooltips. Justification: Visualizes disparities in pharmacy closures.
+        - Pressures on Pharmacies (Blog text): Goal: Explain. Presentation: Tabbed interface (HTML/CSS/JS). Interaction: Click tabs. Justification: Segments different types of pressures.
+        - High Drug Costs & Pharmacy Closures Paradox / Pharmacy Deserts (Blog text): Goal: Explain relationship & impact. Presentation: Text block. Interaction: None. Justification: Provides crucial context.
+        - Top PBMs & Owners (Blog text/external search): Goal: Inform. Presentation: List. Interaction: None. Justification: Identifies key market players.
+        - PBM Mechanisms (Blog text): Goal: Explain. Viz: Interactive HTML/CSS/JS Diagram (styled divs & arrows). Interaction: Click nodes/terms for info. Justification: Clarifies complex financial flows without SVG.
+        - Medicare Negotiated Drugs (Blog Table 2): Goal: Show IRA impact. Presentation: Dynamic HTML Table. Interaction: None beyond display. Justification: Clear data presentation.
+        - References: Goal: Provide source attribution. Presentation: Concise Ordered list (top 30). Interaction: None. Justification: Ensures academic integrity and allows users to verify information, while maintaining conciseness.
+        - All textual content adapted from the blog post, placed in relevant sections with introductory paragraphs for context.
+        CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .section-title { font-size: 1.75rem; font-weight: 600; margin-bottom: 1rem; color: #0284c7; } /* sky-600 */
+        .content-text { color: #404040; line-height: 1.7; } /* neutral-700 */
+        .chart-container { position: relative; width: 100%; max-width: 700px; margin-left: auto; margin-right: auto; height: 320px; max-height: 450px; }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+        .tab-button { padding: 0.5rem 1rem; margin-right: 0.5rem; border-radius: 0.375rem; cursor: pointer; transition: background-color 0.3s; }
+        .tab-button.active { background-color: #0ea5e9; color: white; } /* sky-500 */
+        .tab-button:not(.active) { background-color: #e0f2fe; color: #0c4a6e; } /* sky-100, sky-800 */
+        .accordion-button { background-color: #f0f9ff; color: #075985; width: 100%; text-align: left; padding: 1rem; border: 1px solid #e0f2fe; border-radius: 0.375rem; margin-bottom: 0.5rem; cursor: pointer; transition: background-color 0.3s; display: flex; justify-content: space-between; align-items: center; }
+        .accordion-button:hover { background-color: #e0f2fe; }
+        .accordion-content { padding: 1rem; border: 1px solid #e0f2fe; border-top: none; border-radius: 0 0 0.375rem 0.375rem; display: none; }
+        .pbm-diagram-node { background-color: #cffafe; border: 2px solid #06b6d4; padding: 0.75rem; border-radius: 0.5rem; text-align: center; cursor: pointer; transition: transform 0.2s; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+        .pbm-diagram-node:hover { transform: translateY(-3px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .pbm-diagram-arrow { text-align: center; font-size: 1.5rem; color: #0891b2; margin: 0.5rem 0; display: flex; align-items: center; justify-content: center; height: 100%; }
+        .nav-link { transition: color 0.3s; }
+        .nav-link:hover { color: #0ea5e9; } /* sky-500 */
+        .highlight-box { background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 1rem; margin-bottom: 1rem; border-radius: 0.25rem; } /* amber-50, amber-500 */
+        .inline-reference { cursor: pointer; text-decoration: underline; text-underline-offset: 2px; color: #0284c7; font-weight: 500; } /* sky-600 */
+        #referenceTooltip {
+            position: absolute;
+            z-index: 100;
+            background-color: #1f2937; /* neutral-800 */
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-size: 0.875rem; /* text-sm */
+            max-width: 300px;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+            pointer-events: none; /* Allows clicks to pass through when hidden */
+            display: none; /* Hidden by default */
+        }
+        #referenceTooltip.visible {
+            opacity: 1;
+            display: block;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 text-neutral-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <a href="#" class="text-xl font-bold text-sky-700 mb-2 sm:mb-0">Price of Survival</a>
+            <div class="space-x-2 sm:space-x-4 text-sm sm:text-base flex flex-wrap justify-center">
+                <a href="#intro" class="nav-link text-neutral-600">Intro</a>
+                <a href="#why-expensive" class="nav-link text-neutral-600">Why So Expensive?</a>
+                <a href="#pharmacy-squeeze" class="nav-link text-neutral-600">Pharmacy Squeeze</a>
+                <a href="#pbm-maze" class="nav-link text-neutral-600">PBM Maze</a>
+                <a href="#gov-interventions" class="nav-link text-neutral-600">Govt. Actions</a>
+                <a href="#conclusion" class="nav-link text-neutral-600">Conclusion</a>
+                <a href="#references" class="nav-link text-neutral-600">References</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+
+        <section id="intro" class="mb-12 pt-16 -mt-16">
+            <h2 class="section-title">The High Price of Survival: Unpacking America’s Drug Cost Crisis</h2>
+            <p class="content-text text-sm mb-4">By Sungjoon Jun, PharmD</p>
+            <p class="content-text mb-4">
+                The cost of prescription drugs in the United States casts a long shadow over the healthcare system, with Americans bearing a financial burden unmatched by their counterparts in other wealthy nations.<span class="inline-reference" data-ref-ids="2,3,4,5,6,24"></span> Many individuals face the daunting prospect of choosing between vital medications and other essential needs, a situation highlighting the urgent need to understand the drivers behind these soaring prices. Adding to the complexity is the evolving landscape of pharmacy services, marked by the noticeable decline of familiar neighborhood pharmacies. Once cornerstones of communities, these local establishments are increasingly giving way to large chain stores and mail-order services, altering the way people access their medications.<span class="inline-reference" data-ref-ids="7,8,9,10,11"></span> This interactive guide explores the intricate web of factors contributing to high drug costs and the changing face of pharmacy, exploring the roles of patents, research, insurance, and government intervention in this critical aspect of healthcare.
+            </p>
+        </section>
+
+        <section id="why-expensive" class="mb-12 pt-16 -mt-16">
+            <h2 class="section-title">The Mystery: Why Are Prescription Drugs So Expensive?</h2>
+            <p class="content-text mb-6">
+                Several interconnected factors contribute to the high cost of prescription drugs in the United States. This section delves into the primary drivers, from international price disparities to the influence of patents, research costs, and lobbying efforts, as detailed in the source blog.
+            </p>
+
+            <div class="mb-8 p-6 bg-white rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-3 text-sky-700">US Drug Prices vs. Other Developed Nations (2022)</h3>
+                <p class="content-text mb-4">Research consistently shows that the US pays significantly more for prescription drugs. The chart below, based on Table 1 from the blog post, illustrates this disparity. You can switch between viewing "All Drugs" and "Brand-Name Drugs."</p>
+                <div class="mb-4">
+                    <button id="btnAllDrugs" class="tab-button active">All Drugs</button>
+                    <button id="btnBrandDrugs" class="tab-button">Brand-Name Drugs</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="usVsOecdChart"></canvas>
+                </div>
+                 <p class="text-xs text-neutral-500 mt-2 text-center">Price multiple indicates how many times higher US prices are. Data from blog Table 1.</p>
+            </div>
+
+            <h3 class="text-xl font-semibold mb-3 text-sky-700">Key Factors Driving High Costs:</h3>
+            <div id="costFactorsAccordion">
+                </div>
+        </section>
+
+        <section id="pharmacy-squeeze" class="mb-12 pt-16 -mt-16">
+            <h2 class="section-title">The Vanishing Corner Store: Why Are Neighborhood Pharmacies Disappearing?</h2>
+            <p class="content-text mb-6">
+                Beyond high medication costs, the U.S. is witnessing a concerning decline of independent neighborhood pharmacies. This section explores the pressures these vital community resources face and the resulting impact on local access to care.
+            </p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-3 text-sky-700">Independent Pharmacy Closure Rates (2010-2021)</h3>
+                    <p class="content-text mb-4">Data from Table 3 of the blog post indicates a significant net decrease in pharmacies, with independent pharmacies being particularly vulnerable. This chart highlights closure rates.</p>
+                    <div class="chart-container" style="height: 450px;">
+                        <canvas id="pharmacyClosureChart"></canvas>
+                    </div>
+                    <p class="text-xs text-neutral-500 mt-2 text-center">Data from blog Table 3.</p>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-3 text-sky-700">Pressures on Independent Pharmacies</h3>
+                    <div id="pharmacyPressuresTabs">
+                        <div class="mb-4 border-b border-neutral-300">
+                            <button data-tab="pbmReimbursement" class="tab-button active">PBM Reimbursement</button>
+                            <button data-tab="competition" class="tab-button">Competition</button>
+                            <button data-tab="impact" class="tab-button">Community Impact</button>
+                        </div>
+                        <div id="pbmReimbursementContent" class="tab-content content-text">
+                            <p>PBMs negotiate reimbursement rates. Independent pharmacies often face rates so low they struggle to cover costs. "Spread pricing" and retroactive DIR fees further erode profitability, often leading to reimbursement below acquisition cost.</p>
+                        </div>
+                        <div id="competitionContent" class="tab-content content-text hidden">
+                            <p>Large chain pharmacies benefit from economies of scale. The rise of mail-order pharmacies also diverts business, though they may lack personalized interaction.</p>
+                        </div>
+                        <div id="impactContent" class="tab-content content-text hidden">
+                            <p>Closures, especially in rural/underserved areas, impact access to care. These pharmacies are vital hubs. The rise of "pharmacy deserts" raises health equity concerns.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-white rounded-lg shadow mt-8">
+                <h3 class="text-xl font-semibold mb-3 text-sky-700">The Paradox: High Drug Costs vs. Pharmacy Closures</h3>
+                <p class="content-text mb-4">
+                    It might seem contradictory: drug prices are soaring, yet independent pharmacies are closing. The core of this paradox lies in PBM reimbursement practices. While manufacturers set high list prices, PBMs often reimburse pharmacies at rates below their acquisition cost, especially for expensive drugs.
+                </p>
+                <p class="content-text mb-4">
+                    This "negative margin," exacerbated by retroactive DIR fees, makes dispensing even high-cost drugs unprofitable for pharmacies. Coupled with intense competition, this creates an unsustainable environment for many independent pharmacies.
+                </p>
+                <h4 class="font-semibold text-lg mb-2 text-neutral-700">The Rise of Pharmacy Deserts:</h4>
+                <p class="content-text mb-4">
+                    Pharmacy closures directly contribute to "pharmacy deserts" – areas with limited pharmacy access. This disproportionately affects rural, low-income, and minority communities.<span class="inline-reference" data-ref-ids="7,9,10,11"></span>
+                </p>
+                <p class="content-text">
+                    Consequences include reduced access to medications, counseling, and public health services like vaccinations, leading to poorer health outcomes and increased health disparities.<span class="inline-reference" data-ref-ids="9,10,11"></span>
+                </p>
+            </div>
+        </section>
+
+        <section id="pbm-maze" class="mb-12 pt-16 -mt-16">
+            <h2 class="section-title">The PBM Predicament: Navigating Insurance Reimbursement</h2>
+            <p class="content-text mb-6">
+                Pharmacy Benefit Managers (PBMs) are key intermediaries. This section explains their complex role, financial mechanisms, and the dominance of a few large players.
+            </p>
+            <div class="p-6 bg-white rounded-lg shadow mb-8">
+                <h3 class="text-xl font-semibold mb-3 text-sky-700">The Dominance of Top PBMs</h3>
+                <p class="content-text mb-4">
+                    The PBM market is highly concentrated. The top players, often vertically integrated with insurers and pharmacies, include:
+                </p>
+                <ul id="topPBMsList" class="list-disc list-inside content-text space-y-1">
+                    </ul>
+            </div>
+            <div class="p-6 bg-white rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-3 text-sky-700">How PBMs Operate: A Simplified View</h3>
+                <p class="content-text mb-4">PBMs negotiate prices, manage formularies, and process claims. Click terms for explanations.</p>
+                
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4 my-6">
+                    <div class="pbm-diagram-node w-full md:w-auto max-w-xs" data-info="Drug Manufacturers produce medications and offer rebates to PBMs for favorable formulary placement, influencing which drugs are prioritized.">Drug Manufacturer</div>
+                    <div class="md:hidden pbm-diagram-arrow">&#11015;</div> <div class="hidden md:block pbm-diagram-arrow">&#10132;</div> <div class="pbm-diagram-node w-full md:w-auto max-w-xs" data-info="Pharmacy Benefit Managers (PBMs) negotiate with manufacturers for rebates, create formularies for health plans, and set pharmacy reimbursement rates. They may use 'spread pricing' or apply DIR fees.">PBM</div>
+                    <div class="md:hidden pbm-diagram-arrow">&#11015;</div>
+                    <div class="hidden md:block pbm-diagram-arrow">&#10132;</div>
+
+                    <div class="pbm-diagram-node w-full md:w-auto max-w-xs" data-info="Health Plans / Insurers contract with PBMs to manage prescription drug benefits for their members (patients), relying on PBMs to control costs.">Health Plan / Insurer</div>
+                    <div class="md:hidden pbm-diagram-arrow">&#11015;</div>
+                    <div class="hidden md:block pbm-diagram-arrow">&#10132;</div>
+
+                    <div class="pbm-diagram-node w-full md:w-auto max-w-xs" data-info="Pharmacies dispense medications to patients and are reimbursed by PBMs, often at rates that are contentious, especially for independent pharmacies who may be paid less than drug acquisition cost.">Pharmacy</div>
+                </div>
+
+                <div id="pbmInfoBox" class="mt-4 p-4 bg-sky-50 border border-sky-200 rounded-md content-text hidden">
+                    Select a term in the diagram to learn more.
+                </div>
+                
+                <div class="mt-6">
+                    <h4 class="font-semibold text-lg mb-2 text-neutral-700">Key PBM Practices:</h4>
+                    <ul class="list-disc list-inside content-text space-y-1">
+                        <li><strong class="pbm-interactive-term" data-info="Rebates: Payments from drug manufacturers to PBMs, often for preferred formulary placement. Can incentivize favoring higher-priced drugs.">Rebates</strong></li>
+                        <li><strong class="pbm-interactive-term" data-info="Spread Pricing: When a PBM charges a health plan more for a drug than it reimburses the pharmacy, keeping the difference.">Spread Pricing</strong></li>
+                        <li><strong class="pbm-interactive-term" data-info="DIR Fees: Post-sale adjustments, often retroactive, that PBMs charge pharmacies, reducing their reimbursement unpredictably.">DIR Fees</strong></li>
+                    </ul>
+                </div>
+
+                <div class="mt-6 highlight-box">
+                    <h4 class="font-semibold text-lg mb-2 text-neutral-700">Concerns in the PBM System:</h4>
+                    <p class="content-text">Lack of transparency in contracts and pricing, and potential conflicts of interest from vertical integration (PBMs owned by/affiliated with insurers/pharmacies) are major concerns. This can lead to practices that prioritize PBM profits over patient or pharmacy interests.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="gov-interventions" class="mb-12 pt-16 -mt-16">
+            <h2 class="section-title">Government Attempts at a Cure: Are They Working?</h2>
+            <p class="content-text mb-6">
+                The U.S. government has made various attempts to address high drug prices. This section reviews key initiatives like the Inflation Reduction Act.
+            </p>
+            <div class="p-6 bg-white rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-3 text-sky-700">The Inflation Reduction Act (IRA)</h3>
+                <p class="content-text mb-4">The IRA (2022) allows Medicare to negotiate prices for some high-cost drugs (effective 2026), caps out-of-pocket costs for Medicare Part D, and penalizes price hikes above inflation.<span class="inline-reference" data-ref-ids="1,19,20,21,22"></span></p>
+                
+                <div class="mb-6">
+                    <h4 class="font-semibold text-lg mb-2 text-neutral-700">First 10 Drugs for Medicare Price Negotiation (Effective 2026):</h4>
+                    <p class="content-text mb-2 text-sm">Data from blog Table 2.</p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-neutral-200">
+                            <thead class="bg-neutral-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Drug Name</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Conditions Treated</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Approx. Discount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="negotiatedDrugsTableBody" class="bg-white divide-y divide-neutral-200 content-text text-sm">
+                                </tbody>
+                        </table>
+                    </div>
+                     <p class="text-xs text-neutral-500 mt-2">Discounts are approximate based on list prices.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="highlight-box">
+                        <h4 class="font-semibold text-lg mb-2 text-neutral-700">Other IRA Provisions:</h4>
+                        <ul class="list-disc list-inside content-text space-y-1">
+                            <li>Caps annual out-of-pocket prescription drug costs for Medicare Part D enrollees at $2,000 (starting 2025).</li>
+                            <li>Requires drug companies to pay rebates to Medicare if prices increase faster than inflation.</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-box">
+                        <h4 class="font-semibold text-lg mb-2 text-neutral-700">Challenges & State Initiatives:</h4>
+                        <p class="content-text">Opposition from the pharmaceutical industry (citing stifled innovation) and concerns about unintended consequences (limited access, shortages) persist. Many states pursue their own initiatives (transparency laws, cost caps, PDABs).<span class="inline-reference" data-ref-ids="23"></span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="pt-16 -mt-16">
+            <h2 class="section-title">Conclusion: Towards a Healthier and More Affordable Future</h2>
+            <p class="content-text mb-4">
+                The high cost of prescription drugs in the US and the decline of neighborhood pharmacies are complex and deeply intertwined issues driven by a confluence of factors. Patents and market exclusivity, the immense costs of research and development (and marketing), the lack of government negotiation power, and the significant influence of pharmaceutical lobbying all contribute to the exorbitant prices Americans face for their medications. Simultaneously, independent pharmacies are struggling to survive under pressure from PBMs' low reimbursement rates, competition from large chains and mail-order services, and broader economic challenges.
+            </p>
+            <p class="content-text mb-4">
+                In this intricate system, pharmaceutical manufacturers and Pharmacy Benefit Managers (PBMs) often emerge as the primary beneficiaries. Manufacturers profit from patent-protected high list prices, while PBMs gain from opaque rebate negotiations and practices like spread pricing. Conversely, patients bear the brunt of exorbitant out-of-pocket costs and face reduced access to care due to the proliferation of "pharmacy deserts." Independent pharmacies are also at a severe disadvantage, struggling with unsustainable reimbursement rates and competitive pressures that threaten their very existence.
+            </p>
+            <p class="content-text mb-4">
+                This dynamic creates a paradoxical situation: as drug costs continue to climb, the quality of patient care and overall experience at the pharmacy level often diminishes. To compensate for razor-thin or even negative profit margins on prescriptions, pharmacists and their staff are forced to process a higher volume of prescriptions with fewer resources. This increased workload leaves less time for crucial patient counseling, medication adherence support, and the personalized care that is a hallmark of community pharmacies. The result is a healthcare system where the financial burden on patients is immense, yet the direct service and human connection they receive from their local pharmacy are increasingly compromised.
+            </p>
+            <p class="content-text">
+                Addressing these problems requires comprehensive solutions. The pharmaceutical industry must consider ethical pricing practices that balance innovation with affordability. PBMs need transparent, equitable reimbursement models. Insurers should ensure meaningful coverage. The government has a crucial role in negotiating prices, regulating PBMs, and fostering a competitive market. The ultimate goal is a healthcare system that maximizes patient care, ensuring affordable, accessible medications and robust support from healthcare providers.
+            </p>
+        </section>
+
+        <section id="references" class="pt-16 -mt-16 mb-12">
+            <h2 class="section-title">References</h2>
+            <ol class="list-decimal list-inside content-text space-y-2 text-sm">
+                <li>Dusetzina, L. B. (2023). Medicare Drug Price Negotiation — Early Decisions and What Comes Next. *New England Journal of Medicine*, 389(25), 2311–2313.</li>
+                <li>Mulcahy, A. W., et al. (2023). *International Prescription Drug Price Comparisons: Current Trends and Projections*. RAND Corporation.</li>
+                <li>KFF. (2023). *How Do U.S. Drug Prices Compare to Other Countries?*</li>
+                <li>Congressional Budget Office. (2023). *Selected Options for Reducing the Federal Budget Deficit*.</li>
+                <li>National Academies of Sciences, Engineering, and Medicine. (2018). *Making Medicines Affordable: A National Imperative*. The National Academies Press.</li>
+                <li>OECD. (2023). *Health Statistics*.</li>
+                <li>Qato, D. M., et al. (2020). The Disappearing Community Pharmacy: An Update. *JAMA*, 324(19), 1974–1976.</li>
+                <li>National Community Pharmacists Association. (2023). *Independent Pharmacy Fact Sheet*.</li>
+                <li>Guadamuz, J. S., et al. (2022). Trends in Community Pharmacy Closures in the United States, 2009-2021. *JAMA Health Forum*, 3(11), e224522.</li>
+                <li>Kang, Y., et al. (2022). Pharmacy Deserts and Health Outcomes: A Systematic Review. *Journal of Urban Health*, 99(5), 841–853.</li>
+                <li>Centers for Disease Control and Prevention. (2023). *Access to Pharmacies in Underserved Areas*.</li>
+                <li>National Association of Boards of Pharmacy. (2021). *PBM Transparency and Accountability*.</li>
+                <li>Medicare Payment Advisory Commission. (2023). *Report to the Congress: Medicare Payment Policy*.</li>
+                <li>FTC. (2024). *Pharmacy Benefit Managers: The Powerful Middlemen Inflating Drug Costs and Squeezing Main Street Pharmacies*.</li>
+                <li>Congressional Research Service. (2023). *Pharmacy Benefit Managers (PBMs): An Overview*.</li>
+                <li>America's Health Insurance Plans (AHIP). (2023). *The Role of PBMs in Lowering Drug Costs*.</li>
+                <li>The Commonwealth Fund. (2022). *Understanding Pharmacy Benefit Managers*.</li>
+                <li>U.S. Government Accountability Office. (2023). *Medicare Part D: Action Needed to Address Price Concessions and DIR Fees*.</li>
+                <li>CMS. (2023). *Medicare Drug Price Negotiation: Initial Set of Drugs Selected*.</li>
+                <li>KFF. (2022). *Explaining the Prescription Drug Provisions in the Inflation Reduction Act*.</li>
+                <li>AARP. (2022). *How the Inflation Reduction Act will Lower Drug Costs for Seniors*.</li>
+                <li>The White House. (2022). *Fact Sheet: The Inflation Reduction Act Will Lower Health Care Costs for Millions of Americans*.</li>
+                <li>National Conference of State Legislatures. (2023). *State Action on Prescription Drug Costs*.</li>
+                <li>KFF. (2024). *The U.S. Prescription Drug System*.</li>
+                <li>Congressional Research Service. (2022). *Drug Pricing: Patents, Exclusivity, and the Role of Innovation*.</li>
+                <li>The Pew Charitable Trusts. (2021). *Understanding Drug Patents and Exclusivity*.</li>
+                <li>PhRMA. (2023). *Biopharmaceutical Research & Development: The Process*.</li>
+                <li>Drug Channels Institute. (2023). *The 2023-2024 Economic Report on U.S. Pharmacies and Pharmacy Benefit Managers*.</li>
+                <li>Centers for Medicare & Medicaid Services. (2023). *Medicare Part D Direct and Indirect Remuneration (DIR) Guidance*.</li>
+                <li>The Brookings Institution. (2023). *The Inflation Reduction Act and Drug Prices: What to Expect*.</li>
+                <li>American Pharmacists Association. (2023). *Pharmacist Reimbursement and DIR Fees*.</li>
+            </ol>
+        </section>
+    </main>
+
+    <div id="referenceTooltip" class="absolute z-50 bg-neutral-800 text-white p-3 rounded-md shadow-lg text-xs max-w-xs opacity-0 transition-opacity duration-200"></div>
+
+    <footer class="bg-neutral-800 text-neutral-300 text-center p-6 mt-12">
+        <p>Author: Sungjoon Jun</p>
+        <p>&copy; 2024 Drug Pricing Insights. All rights reserved. Information for educational purposes only.</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+
+                // If the href is just '#', scroll to the top of the page
+                if (targetId === '#') {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                    return;
+                }
+
+                // For other #ids
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header').offsetHeight;
+                    const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = elementPosition - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                }
+            });
+        });
+
+        const blogData = {
+            usVsOecd: {
+                allDrugs: { labels: ['Canada', 'UK', 'France', 'Germany', 'Japan', 'OECD Avg.'], data: [2.29, 3.33, 4.63, 3.98, 4.12, 2.78] },
+                brandDrugs: { labels: ['Canada', 'UK', 'France', 'Germany', 'Japan', 'OECD Avg.'], data: [4.00, 5.00, 6.45, 5.32, 5.88, 4.22] }
+            },
+            pharmacyClosures: {
+                labels: ['All Retail', 'Independent', 'Chain', 'Black Areas', 'Latinx Areas', 'White Areas', 'Low-Income'],
+                data: [29.4, 38.9, 21.9, 37.5, 35.6, 27.7, 34.3]
+            },
+            negotiatedDrugs: [
+                { name: "Eliquis", conditions: "Blood thinner", discount: "56%" },
+                { name: "Jardiance", conditions: "Diabetes", discount: "66%" },
+                { name: "Xarelto", conditions: "Blood thinner", discount: "62%" },
+                { name: "Januvia", conditions: "Diabetes", discount: "79%" },
+                { name: "Farxiga", conditions: "Diabetes, heart failure, chronic kidney disease", discount: "68%" },
+                { name: "Entresto", conditions: "Heart failure", discount: "53%" },
+                { name: "Enbrel", conditions: "Rheumatoid arthritis", discount: "67%" },
+                { name: "Imbruvica", conditions: "Blood cancers", discount: "38%" },
+                { name: "Stelara", conditions: "Psoriasis and Crohn's disease", discount: "66%" },
+                { name: "Fiasp/NovoLog", conditions: "Diabetes", discount: "76%" }
+            ],
+            costFactors: [
+                { title: "Patents & Market Exclusivity", content: "Pharmaceutical companies get temporary monopolies via patents (e.g., 5 years for small molecules, 12 for biologics). This allows price setting without competition. 'Evergreening' (minor reformulations for new patents) can extend exclusivity and delay cheaper generics." },
+                { title: "Research & Development (R&D) Costs", content: "Developing a new drug is lengthy (approx. 12 years) and expensive (est. $3 billion, accounting for failures). Industry argues high prices offset these costs. Critics note high spending on marketing/lobbying and public funding for foundational science." },
+                { title: "Lack of Government Negotiation Power", content: "Unlike many countries, the US government (Medicare) is largely prohibited from directly negotiating drug prices. The Inflation Reduction Act allows some negotiation starting 2026, but its scope is limited." },
+                { title: "Pharmaceutical Lobbying Power", content: "Companies invest billions in lobbying to influence legislation and regulations, hindering reforms aimed at lowering prices." }
+            ],
+            topPBMs: [
+                "<strong>CVS Caremark:</strong> Owned by CVS Health (also owns Aetna insurance and CVS retail pharmacies).",
+                "<strong>Express Scripts:</strong> Part of The Cigna Group (also sells health insurance).",
+                "<strong>Optum Rx:</strong> A division of UnitedHealth Group (also sells health insurance).",
+                "<strong>Humana Pharmacy Solutions:</strong> Owned by Humana.",
+                "<strong>Prime Therapeutics:</strong> Jointly owned by multiple Blue Cross Blue Shield plans."
+            ]
+        };
+
+        // References data for tooltip
+        const referencesData = [
+            { id: 1, text: "Dusetzina, L. B. (2023). Medicare Drug Price Negotiation — Early Decisions and What Comes Next. *New England Journal of Medicine*, 389(25), 2311–2313." },
+            { id: 2, text: "Mulcahy, A. W., et al. (2023). *International Prescription Drug Price Comparisons: Current Trends and Projections*. RAND Corporation." },
+            { id: 3, text: "KFF. (2023). *How Do U.S. Drug Prices Compare to Other Countries?*" },
+            { id: 4, text: "Congressional Budget Office. (2023). *Selected Options for Reducing the Federal Budget Deficit*." },
+            { id: 5, text: "National Academies of Sciences, Engineering, and Medicine. (2018). *Making Medicines Affordable: A National Imperative*. The National Academies Press." },
+            { id: 6, text: "OECD. (2023). *Health Statistics*." },
+            { id: 7, text: "Qato, D. M., et al. (2020). The Disappearing Community Pharmacy: An Update. *JAMA*, 324(19), 1974–1976." },
+            { id: 8, text: "National Community Pharmacists Association. (2023). *Independent Pharmacy Fact Sheet*." },
+            { id: 9, text: "Guadamuz, J. S., et al. (2022). Trends in Community Pharmacy Closures in the United States, 2009-2021. *JAMA Health Forum*, 3(11), e224522." },
+            { id: 10, text: "Kang, Y., et al. (2022). Pharmacy Deserts and Health Outcomes: A Systematic Review. *Journal of Urban Health*, 99(5), 841–853." },
+            { id: 11, text: "Centers for Disease Control and Prevention. (2023). *Access to Pharmacies in Underserved Areas*." },
+            { id: 12, text: "National Association of Boards of Pharmacy. (2021). *PBM Transparency and Accountability*." },
+            { id: 13, text: "Medicare Payment Advisory Commission. (2023). *Report to the Congress: Medicare Payment Policy*." },
+            { id: 14, text: "FTC. (2024). *Pharmacy Benefit Managers: The Powerful Middlemen Inflating Drug Costs and Squeezing Main Street Pharmacies*." },
+            { id: 15, text: "Congressional Research Service. (2023). *Pharmacy Benefit Managers (PBMs): An Overview*." },
+            { id: 16, text: "America's Health Insurance Plans (AHIP). (2023). *The Role of PBMs in Lowering Drug Costs*." },
+            { id: 17, text: "The Commonwealth Fund. (2022). *Understanding Pharmacy Benefit Managers*." },
+            { id: 18, text: "U.S. Government Accountability Office. (2023). *Medicare Part D: Action Needed to Address Price Concessions and DIR Fees*." },
+            { id: 19, text: "CMS. (2023). *Medicare Drug Price Negotiation: Initial Set of Drugs Selected*." },
+            { id: 20, text: "KFF. (2022). *Explaining the Prescription Drug Provisions in the Inflation Reduction Act*." },
+            { id: 21, text: "AARP. (2022). *How the Inflation Reduction Act will Lower Drug Costs for Seniors*." },
+            { id: 22, text: "The White House. (2022). *Fact Sheet: The Inflation Reduction Act Will Lower Health Care Costs for Millions of Americans*." },
+            { id: 23, text: "National Conference of State Legislatures. (2023). *State Action on Prescription Drug Costs*." },
+            { id: 24, text: "KFF. (2024). *The U.S. Prescription Drug System*." },
+            { id: 25, text: "Congressional Research Service. (2022). *Drug Pricing: Patents, Exclusivity, and the Role of Innovation*." },
+            { id: 26, text: "The Pew Charitable Trusts. (2021). *Understanding Drug Patents and Exclusivity*." },
+            { id: 27, text: "PhRMA. (2023). *Biopharmaceutical Research & Development: The Process*." },
+            { id: 28, text: "Drug Channels Institute. (2023). *The 2023-2024 Economic Report on U.S. Pharmacies and Pharmacy Benefit Managers*." },
+            { id: 29, text: "Centers for Medicare & Medicaid Services. (2023). *Medicare Part D Direct and Indirect Remuneration (DIR) Guidance*." },
+            { id: 30, text: "The Brookings Institution. (2023). *The Inflation Reduction Act and Drug Prices: What to Expect*." },
+            { id: 31, text: "American Pharmacists Association. (2023). *Pharmacist Reimbursement and DIR Fees*." }
+        ];
+
+        function formatLabel(str, maxwidth){
+            let sections = [];
+            let words = str.split(" ");
+            let temp = "";
+            words.forEach((item, index) => {
+                temp = temp.length > 0 ? temp + " " + item : item;
+                if(temp.length > maxwidth){ sections.push(temp); temp = ""; }
+                if(index === words.length - 1 && temp.length > 0){ sections.push(temp); }
+            });
+            return sections.length > 0 ? sections : [str];
+        }
+
+        let usVsOecdChartInstance;
+        const usVsOecdCtx = document.getElementById('usVsOecdChart').getContext('2d');
+        function renderUsVsOecdChart(dataType) {
+            const dataConfig = dataType === 'all' ? blogData.usVsOecd.allDrugs : blogData.usVsOecd.brandDrugs;
+            if (usVsOecdChartInstance) usVsOecdChartInstance.destroy();
+            usVsOecdChartInstance = new Chart(usVsOecdCtx, {
+                type: 'bar',
+                data: { labels: dataConfig.labels, datasets: [{ label: 'US Price Multiple', data: dataConfig.data, backgroundColor: 'rgba(2, 132, 199, 0.7)', borderColor: 'rgba(2, 132, 199, 1)', borderWidth: 1 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'US Price Multiple' } }, x: { ticks: { callback: function(val, idx) { return formatLabel(this.getLabelForValue(val), 10); } } } }, plugins: { tooltip: { callbacks: { label: ctx => `US prices: ${ctx.parsed.y}x higher` } } } }
+            });
+        }
+        document.getElementById('btnAllDrugs').addEventListener('click', () => { renderUsVsOecdChart('all'); document.getElementById('btnAllDrugs').classList.add('active'); document.getElementById('btnBrandDrugs').classList.remove('active'); });
+        document.getElementById('btnBrandDrugs').addEventListener('click', () => { renderUsVsOecdChart('brand'); document.getElementById('btnBrandDrugs').classList.add('active'); document.getElementById('btnAllDrugs').classList.remove('active'); });
+        renderUsVsOecdChart('all');
+
+        const pharmacyClosureCtx = document.getElementById('pharmacyClosureChart').getContext('2d');
+        new Chart(pharmacyClosureCtx, {
+            type: 'bar',
+            data: { labels: blogData.pharmacyClosures.labels, datasets: [{ label: 'Closure Rate (%) 2010-2021', data: blogData.pharmacyClosures.data, backgroundColor: 'rgba(217, 119, 6, 0.7)', borderColor: 'rgba(217, 119, 6, 1)', borderWidth: 1 }] },
+            options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', scales: { x: { beginAtZero: true, title: { display: true, text: 'Closure Rate (%)' } }, y: { ticks: { callback: function(val, idx) { return formatLabel(this.getLabelForValue(val), 15); } } } }, plugins: { tooltip: { callbacks: { label: ctx => `${ctx.parsed.x}% closure rate` } } } }
+        });
+        
+        const accordionContainer = document.getElementById('costFactorsAccordion');
+        blogData.costFactors.forEach(factor => {
+            const button = document.createElement('button');
+            button.className = 'accordion-button';
+            button.innerHTML = `${factor.title} <span class="plus-minus">+</span>`;
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'accordion-content content-text';
+            contentDiv.innerHTML = `<p>${factor.content}</p>`;
+            button.addEventListener('click', () => {
+                const isVisible = contentDiv.style.display === 'block';
+                document.querySelectorAll('#costFactorsAccordion .accordion-content').forEach(ac => ac.style.display = 'none');
+                document.querySelectorAll('#costFactorsAccordion .plus-minus').forEach(pm => pm.textContent = '+');
+                if (!isVisible) { contentDiv.style.display = 'block'; button.querySelector('.plus-minus').textContent = '-'; }
+            });
+            accordionContainer.appendChild(button);
+            accordionContainer.appendChild(contentDiv);
+        });
+
+        const tabButtons = document.querySelectorAll('#pharmacyPressuresTabs .tab-button');
+        const tabContents = document.querySelectorAll('#pharmacyPressuresTabs .tab-content');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                const targetTab = button.dataset.tab;
+                tabContents.forEach(content => {
+                    content.id === `${targetTab}Content` ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+        
+        const pbmNodes = document.querySelectorAll('.pbm-diagram-node, .pbm-interactive-term');
+        const pbmInfoBox = document.getElementById('pbmInfoBox');
+        pbmNodes.forEach(node => {
+            node.addEventListener('click', (e) => {
+                e.stopPropagation();
+                pbmInfoBox.textContent = node.dataset.info;
+                pbmInfoBox.classList.remove('hidden');
+            });
+        });
+        document.body.addEventListener('click', (e) => {
+            if (!pbmInfoBox.contains(e.target) && ![...pbmNodes].includes(e.target)) {
+                 pbmInfoBox.classList.add('hidden');
+            }
+        });
+
+
+        const negotiatedDrugsTableBody = document.getElementById('negotiatedDrugsTableBody');
+        blogData.negotiatedDrugs.forEach(drug => {
+            const row = negotiatedDrugsTableBody.insertRow();
+            row.insertCell().textContent = drug.name;
+            const conditionsCell = row.insertCell();
+            conditionsCell.innerHTML = drug.conditions.split(', ').map(c => formatLabel(c, 25).join('<br>')).join('<br>');
+            row.insertCell().textContent = drug.discount;
+        });
+
+        const topPBMsList = document.getElementById('topPBMsList');
+        blogData.topPBMs.forEach(pbmText => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = pbmText;
+            topPBMsList.appendChild(listItem);
+        });
+
+        // Tooltip logic for inline references
+        const referenceTooltip = document.getElementById('referenceTooltip');
+
+        function getReferenceTextForTooltip(ids) {
+            const idArray = ids.split(',').map(id => parseInt(id.trim()));
+            let text = '';
+            idArray.forEach(id => {
+                const ref = referencesData.find(r => r.id === id);
+                if (ref) {
+                    text += `[${id}] ${ref.text}<br>`;
+                }
+            });
+            return text;
+        }
+
+        document.querySelectorAll('.inline-reference').forEach(span => {
+            let hideTimeout;
+
+            span.addEventListener('mouseover', function(e) {
+                clearTimeout(hideTimeout);
+                const refIds = this.dataset.refIds;
+                referenceTooltip.innerHTML = getReferenceTextForTooltip(refIds);
+                referenceTooltip.classList.add('visible'); // Use 'visible' class to manage display and opacity
+
+                // Position tooltip
+                const rect = this.getBoundingClientRect();
+                let top = rect.bottom + window.scrollY + 5;
+                let left = rect.left + window.scrollX;
+
+                // Adjust position if it goes off-screen
+                if (left + referenceTooltip.offsetWidth > window.innerWidth) {
+                    left = window.innerWidth - referenceTooltip.offsetWidth - 10;
+                }
+                if (top + referenceTooltip.offsetHeight > window.innerHeight + window.scrollY) {
+                    top = rect.top + window.scrollY - referenceTooltip.offsetHeight - 5;
+                }
+                if (left < 0) left = 10; // Prevent going off left edge
+
+                referenceTooltip.style.top = `${top}px`;
+                referenceTooltip.style.left = `${left}px`;
+            });
+
+            span.addEventListener('mouseout', function() {
+                hideTimeout = setTimeout(() => {
+                    referenceTooltip.classList.remove('visible');
+                }, 300); // Delay hiding for smoother experience
+            });
+
+            span.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent document click from immediately closing
+                const refIds = this.dataset.refIds;
+                // Toggle visibility on click
+                if (referenceTooltip.classList.contains('visible') && referenceTooltip.innerHTML === getReferenceTextForTooltip(refIds)) {
+                    referenceTooltip.classList.remove('visible');
+                } else {
+                    clearTimeout(hideTimeout);
+                    referenceTooltip.innerHTML = getReferenceTextForTooltip(refIds);
+                    referenceTooltip.classList.add('visible');
+
+                    const rect = this.getBoundingClientRect();
+                    let top = rect.bottom + window.scrollY + 5;
+                    let left = rect.left + window.scrollX;
+
+                    if (left + referenceTooltip.offsetWidth > window.innerWidth) {
+                        left = window.innerWidth - referenceTooltip.offsetWidth - 10;
+                    }
+                    if (top + referenceTooltip.offsetHeight > window.innerHeight + window.scrollY) {
+                        top = rect.top + window.scrollY - referenceTooltip.offsetHeight - 5;
+                    }
+                    if (left < 0) left = 10;
+
+                    referenceTooltip.style.top = `${top}px`;
+                    referenceTooltip.style.left = `${left}px`;
+                }
+            });
+        });
+
+        // Hide tooltip when clicking anywhere else on the document
+        document.addEventListener('click', (e) => {
+            if (!referenceTooltip.contains(e.target) && !e.target.classList.contains('inline-reference')) {
+                referenceTooltip.classList.remove('visible');
+            }
+        });
+
+        // Handle window resize to reposition tooltip if open
+        window.addEventListener('resize', () => {
+            if (referenceTooltip.classList.contains('visible')) {
+                const activeRef = document.querySelector('.inline-reference:hover, .inline-reference.clicked-active'); // Add a class for clicked active
+                if (activeRef) {
+                    const rect = activeRef.getBoundingClientRect();
+                    let top = rect.bottom + window.scrollY + 5;
+                    let left = rect.left + window.scrollX;
+
+                    if (left + referenceTooltip.offsetWidth > window.innerWidth) {
+                        left = window.innerWidth - referenceTooltip.offsetWidth - 10;
+                    }
+                    if (top + referenceTooltip.offsetHeight > window.innerHeight + window.scrollY) {
+                        top = rect.top + window.scrollY - referenceTooltip.offsetHeight - 5;
+                    }
+                    if (left < 0) left = 10;
+
+                    referenceTooltip.style.top = `${top}px`;
+                    referenceTooltip.style.left = `${left}px`;
+                } else {
+                    referenceTooltip.classList.remove('visible'); // Hide if no active element
+                }
+            }
+        });
+    </script>
+</body>
+</html>
