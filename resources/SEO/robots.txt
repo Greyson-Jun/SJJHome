@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin/          # Example: Disallow access to an admin directory
+Disallow: /private-files/ # Example: Disallow access to a private directory
+Allow: /
+
+Sitemap: https://www.example.com/sitemap.xml
