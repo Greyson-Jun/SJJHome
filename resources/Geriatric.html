@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geriatric Medication Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            overflow-x: hidden; /* Prevent horizontal scroll when sidebar slides */
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .nav-link.active {
+            background-color: #4F46E5; /* indigo-600 */
+            color: white;
+        }
+        .key-takeaways {
+            background-color: #EEF2FF; /* indigo-50 */
+            border-left: 4px solid #4F46E5; /* indigo-600 */
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.375rem; /* rounded-md */
+        }
+        .key-takeaways h4 {
+            font-weight: 600;
+            color: #3730A3; /* indigo-800 */
+            margin-bottom: 0.5rem;
+        }
+        .did-you-know {
+            background-color: #F0FDF4; /* green-50 */
+            border-left: 4px solid #22C55E; /* green-500 */
+            padding: 1rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.375rem; /* rounded-md */
+        }
+        .did-you-know h4 {
+            font-weight: 600;
+            color: #15803D; /* green-700 */
+            margin-bottom: 0.5rem;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 1.5rem;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #D1D5DB; /* gray-300 */
+            padding: 0.75rem;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #F3F4F6; /* gray-100 */
+            font-weight: 600;
+        }
+        .highlight-search {
+            background-color: #FEF9C3; /* yellow-100 */
+            font-weight: 500;
+        }
+        .sidebar {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(-100%); /* Hidden by default */
+            z-index: 40; /* Ensure sidebar is above content when overlaying on mobile */
+        }
+        .sidebar.active {
+            transform: translateX(0);
+        }
+        .main-content {
+            transition: margin-left 0.3s ease-in-out;
+            width: 100%;
+        }
+
+        @media (min-width: 769px) { /* md breakpoint in Tailwind is 768px */
+            .sidebar.active {
+                 /* Keep it visible and occupy space */
+            }
+            .main-content.sidebar-active {
+                margin-left: 18rem; /* Same as sidebar width (w-72) */
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 280px; /* Fixed width for mobile overlay */
+                position: fixed; /* Overlay content */
+                left:0;
+                top:0;
+                bottom:0;
+            }
+             .main-content.sidebar-active {
+                /* No margin change, sidebar overlays */
+            }
+            .menu-button-container {
+                padding: 1rem; /* More spacing for mobile */
+            }
+        }
+        .chapter-nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #E5E7EB; /* gray-200 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="flex flex-col md:flex-row min-h-screen relative">
+        <aside id="sidebar" class="sidebar w-full md:w-72 bg-gray-800 text-white p-4 md:p-6 space-y-2 fixed h-full overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold">Guide Sections</h1>
+                <button id="closeMenuButton" class="md:hidden text-white hover:text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <nav id="navigationMenu">
+                <a href="#introduction" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">Introduction</a>
+                <a href="#chapter1" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">1. Benadryl & Insomnia</a>
+                <a href="#chapter2" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">2. Meds to Avoid</a>
+                <a href="#chapter3" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">3. Cheaper Drug Prices</a>
+                <a href="#chapter4" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">4. Adherence & Management</a>
+                <a href="#chapter5" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">5. Brand vs. Generic</a>
+                <a href="#chapter6" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">6. Addiction Concerns</a>
+                <a href="#chapter7" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">7. Polypharmacy & Review</a>
+                <a href="#chapter8" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">8. Swallowing Difficulties</a>
+                <a href="#chapter9" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">9. OTC Buying Guide</a>
+                <a href="#chapter10" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">10. Beers Criteria List</a>
+                <a href="#chapter11" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">11. Antibiotic Use</a>
+                <a href="#chapter12" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">12. Reliable Info Sources</a>
+                <a href="#conclusion" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">Conclusion</a>
+                <a href="#glossary" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">Glossary</a>
+                <a href="#references" class="nav-link block py-2.5 px-4 rounded-md hover:bg-gray-700 transition duration-200">References</a>
+            </nav>
+        </aside>
+
+        <main id="mainContent" class="main-content flex-1 md:p-10">
+            <div class="menu-button-container p-4 sticky top-0 bg-gray-100 md:bg-transparent z-30">
+                 <button id="menuButton" class="p-2 text-gray-700 hover:text-indigo-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                    <span class="sr-only">Open Menu</span>
+                </button>
+            </div>
+             <div class="p-4 pt-0 md:p-0"> <header class="mb-8">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Geriatric Medication Guide</h1>
+                </header>
+
+                <section id="introduction" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Introduction: Navigating Medications and Supplements in Older Adulthood</h2>
+                    <p class="mb-4">The healthcare journey for older adults is often complex, frequently involving multiple chronic conditions that require numerous medications. This use of multiple medications, known as polypharmacy, creates significant hurdles in managing health safely and effectively, impacting overall well-being. As we age, our bodies change, affecting how we absorb, process, and eliminate drugs. These changes can lead to unexpected reactions and a higher chance of negative side effects. Additionally, the sheer number of pills, or "pill burden," can feel overwhelming, causing confusion, missed doses, and potential harm. "Pill burden" encompasses not just the quantity of medications but also the total effort involved in managing them, including storing, organizing, taking, and understanding each one.</p>
+                    <p class="mb-4">This guide aims to help older adults and their caregivers understand the critical aspects of using medications and supplements. It covers the risks of certain common drugs, suggests safer options, provides tips for managing costs and taking medicines correctly, explains brand versus generic drugs, discusses prescription addiction concerns, simplifies drug categories, offers solutions for swallowing difficulties, and provides a guide to over-the-counter (OTC) choices. Our goal is to empower older adults to make well-informed decisions, promoting safer and more effective medication use.</p>
+                    <p class="text-md text-gray-700 mt-6 pt-4 border-t border-gray-200">A Comprehensive Guide to Safe and Effective Management by Sungjoon Jun, PharmD</p>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="chapter1" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Chapter 1: Benadryl Use in Geriatrics for Insomnia: Dangers and Alternatives</h2>
+                    <div class="key-takeaways">
+                        <h4>Key Takeaways:</h4>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Avoid Benadryl (diphenhydramine) for sleep in older adults due to high risks (confusion, falls, dementia link).</li>
+                            <li>Tolerance to Benadryl develops quickly, but the risks remain.</li>
+                            <li>Non-drug strategies (Sleep Hygiene, CBT-I) are often the safest and most effective long-term solutions for insomnia.</li>
+                            <li>Discuss any OTC sleep aids (including Melatonin or Magnesium) with your doctor first.</li>
+                        </ul>
+                    </div>
+                    <div class="did-you-know">
+                        <h4>Did you know?</h4>
+                        <p>Your body can become tolerant to the sleep-inducing effects of Benadryl in as little as one to two weeks, but the risky side effects don't go away! This means it stops helping you sleep but can still cause confusion or dizziness.</p>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 mt-6">1.1 The Risks of Diphenhydramine (Benadryl) in Older Adults</h3>
+                    <p class="mb-4">Diphenhydramine, widely recognized by its brand name Benadryl, is an antihistamine available without a prescription. While often used for occasional sleeplessness due to its drowsy-making properties, it is strongly advised against for treating long-term insomnia, especially in older adults.</p>
+                    <p class="mb-4">A major issue is that the body quickly builds tolerance to its sleep-inducing effects, often within just one or two weeks of continuous use. This rapid development of tolerance means its sleep benefit fades fast, while the risks associated with the drug persist, creating a hazardous situation.</p>
+                    <p class="mb-4">The primary reason to avoid Benadryl in older adults is its strong "anticholinergic" effects. Anticholinergic drugs block acetylcholine, a vital chemical messenger in the brain essential for memory, learning, and focus. In older individuals, whose bodies might not clear these drugs as efficiently, these effects can lead to serious side effects. Research strongly links the long-term use of anticholinergic drugs like diphenhydramine to an increased risk of dementia, a risk not limited to older adults but also potentially affecting younger individuals. These drugs can impair cognitive functions such as alertness, attention, memory, and reaction time. One study indicated that older hospital patients using diphenhydramine had a significantly higher risk of delirium (sudden confusion), including difficulties with attention and disorganized speech.</p>
+                    <p class="mb-4">Beyond cognitive effects, diphenhydramine can cause various physical problems in older adults:</p>
+                    <ul class="list-disc list-inside mb-4 space-y-1">
+                        <li>Daytime sleepiness</li>
+                        <li>Dizziness</li>
+                        <li>Dry mouth</li>
+                        <li>Constipation</li>
+                        <li>Difficulty urinating completely</li>
+                        <li>Blurred vision</li>
+                        <li>Increased risk of falls due to sleepiness and dizziness</li>
+                        <li>Balance and coordination issues</li>
+                        <li>Mucus buildup in the lungs</li>
+                        <li>Fast heart rate (tachycardia)</li>
+                        <li>Low blood pressure (hypotension)</li>
+                    </ul>
+                    <p class="mb-4">Older adults with kidney or liver problems are particularly vulnerable because their bodies cannot process the drug effectively. Due to these significant risks, the American Geriatrics Society (AGS) Beers Criteria® lists diphenhydramine as a medication that older adults should generally avoid.</p>
+                    <h3 class="text-xl font-semibold mb-3">1.2 Alternative OTC and Natural Options for Insomnia</h3>
+                    <p class="mb-4">Given the risks associated with Benadryl, exploring safer sleep aids is crucial. Often, the most effective approach involves strategies that do not rely on drugs.</p>
+                    <h4 class="text-lg font-semibold mb-2">Over-the-Counter (OTC) & Natural Alternatives:</h4>
+                    <ul class="list-disc list-inside mb-4 space-y-2">
+                        <li><strong>Melatonin:</strong> This natural hormone helps regulate the sleep-wake cycle. Supplements may aid with jet lag or falling asleep, though the effect is typically mild. Studies suggest it can improve sleep quality and appears safe for short-term use. While not considered physically addictive like prescription sleep aids, some individuals may develop a psychological reliance or experience tolerance, necessitating higher doses over time. It is best used short-term and under medical guidance. Potential side effects include headaches, nausea, or daytime sleepiness. Doses usually range from 3 to 10 milligrams (mg) before bedtime.</li>
+                        <li><strong>Magnesium:</strong> Some research indicates that magnesium supplements may help improve sleep quality, particularly in older adults, possibly by aiding in neurotransmitter regulation and muscle relaxation. Study dosages have varied, with one demonstrating benefits at 500mg daily. However, consulting a doctor before starting magnesium is essential, as it can cause side effects like diarrhea and cramping and may interact with other medications.</li>
+                        <li><strong>Valerian Root:</strong> This herbal supplement is sometimes used for sleep. Some studies suggest it offers benefits, especially for women in menopause, but research findings are inconsistent. Side effects are generally mild (e.g., headache, weakness), and while short-term use seems safe, long-term safety is not well-established.</li>
+                    </ul>
+                    <p class="mb-4"><strong>Note on Doxylamine (Unisom):</strong> Similar to Benadryl, doxylamine (Unisom) is a sedating antihistamine. It carries comparable risks for older adults, including drowsiness, dry mouth, and constipation, and is also listed on the Beers Criteria® as potentially inappropriate. Therefore, it should be used with extreme caution, if at all, in this population.</p>
+                    <h4 class="text-lg font-semibold mb-2">Non-Pharmacological and Natural Strategies:</h4>
+                    <p class="mb-4">These methods, focusing on habits and environment, often provide lasting benefits without the side effects associated with medication.</p>
+                    <ul class="list-disc list-inside mb-4 space-y-2">
+                        <li><strong>Sleep Hygiene:</strong> This involves cultivating good sleep habits.
+                            <ul class="list-circle list-inside ml-4 mt-1 space-y-1">
+                                <li>Maintain a regular sleep-wake schedule, even on weekends.</li>
+                                <li>Ensure your bedroom is cool (60-70°F), dark, quiet, and comfortable.</li>
+                                <li>Avoid large meals, caffeine, nicotine, and alcohol close to bedtime.</li>
+                                <li>Limit naps to under an hour and take them earlier in the day.</li>
+                                <li>Engage in relaxing activities like reading or listening to music to wind down before bed.</li>
+                                <li>Avoid screens (phones, TVs, computers) for at least an hour before sleep.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Cognitive Behavioral Therapy for Insomnia (CBT-I):</strong> This is a highly recommended therapy for chronic insomnia. It helps modify unhelpful beliefs and attitudes about sleep and includes:
+                            <ul class="list-circle list-inside ml-4 mt-1 space-y-1">
+                                <li><strong>Stimulus Control:</strong> Training to associate the bed only with sleep and intimacy. If unable to sleep within 15-20 minutes, get out of bed, go to another room, and only return when sleepy.</li>
+                                <li><strong>Sleep Restriction:</strong> Limiting time in bed to match the actual duration of sleep, then gradually increasing it as sleep improves. This should be used cautiously if you have conditions like epilepsy.</li>
+                                <li><strong>Relaxation Training:</strong> Employing techniques such as muscle relaxation or meditation to calm the mind and body.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Dietary Adjustments:</strong> Some individuals find chamomile tea, warm milk, or tart cherry juice helpful for promoting sleep.</li>
+                    </ul>
+                    <p>Utilizing these non-drug strategies can significantly improve sleep for older adults, often more effectively and safely than medication.</p>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="chapter2" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Chapter 2: Medications to Avoid and Safer Alternatives</h2>
+                    <div class="key-takeaways">
+                        <h4>Key Takeaways:</h4>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>The Beers Criteria® helps identify risky medications for older adults.</li>
+                            <li>Many common drug classes, such as first-generation antihistamines, certain antidepressants, benzodiazepines, and NSAIDs, pose higher risks for older individuals.</li>
+                            <li>Always discuss potential alternatives with your doctor or pharmacist.</li>
+                            <li>Never assume a medication is safe merely because it's widely used or available over-the-counter.</li>
+                        </ul>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">2.1 Principles for Avoiding Medications in Older Adults</h3>
+                    <p class="mb-4">The American Geriatrics Society (AGS) Beers Criteria® is a crucial resource for minimizing drug-related problems in adults aged 65 and older. It identifies Potentially Inappropriate Medications (PIMs)—drugs that should be avoided, used cautiously, monitored for interactions, avoided in specific conditions, or adjusted for kidney function. This tool assists doctors and patients in selecting safer medications and enhancing the quality of care.</p>
+                    <p class="mb-4">The inclusion of a drug on the Beers list does not mean that no older adult should ever take it. Rather, it signifies that these drugs carry higher risks or may not be as effective due to age-related physiological changes and the multiple medications older adults often consume. The way the body handles drugs changes with age, making responses difficult to predict. Treatment must always be personalized, taking into account individual health goals and preferences.</p>
+                    <p class="mb-4">Doctors should exercise caution when prescribing these medications, ensuring a clear need exists and that the benefits outweigh the potential risks. Regular medication reviews are vital to eliminate unneeded drugs (a process known as deprescribing) and to check for interactions or necessary dosage adjustments. Patients and caregivers must share a complete list of all medications, including OTC drugs and supplements, and report any concerns to their healthcare providers.</p>
+                    <h3 class="text-xl font-semibold mb-3">2.2 Specific Medication Classes to Avoid and Their Alternatives</h3>
+                    <p class="mb-4">The Beers Criteria® highlights several drug types and suggests safer options. Key examples include:</p>
+                    <div class="overflow-x-auto">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Medication Class/Examples (to avoid)</th>
+                                    <th>Rationale for Avoidance</th>
+                                    <th>Possible Alternatives to Discuss</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>First-Generation Antihistamines (e.g., Benadryl, Chlor-Trimeton, Phenergan, Unisom)</td><td>Highly anticholinergic; cause confusion, dry mouth, constipation, dizziness, falls. Dementia risk with long-term use.</td><td>Saline nasal spray, steroid nasal sprays (Flonase), second-gen antihistamines (Zyrtec, Fexofenadine, Claritin). For sleep: non-drug options, melatonin, trazodone.</td></tr>
+                                <tr><td>Tricyclic Antidepressants (TCAs) (e.g., Elavil, Tofranil, Nortriptyline, Pamelor)</td><td>Strong anticholinergic/sedative effects. Risk of falls, constipation, heart rhythm changes, cognitive issues.</td><td>SSRIs (Celexa, Sertraline, Lexapro), SNRIs (Effexor), bupropion.</td></tr>
+                                <tr><td>NSAIDs (e.g., Ibuprofen (Advil, Motrin), Naproxen (Aleve), Indomethacin)</td><td>Risk of stomach bleeding, kidney damage, high blood pressure, heart issues. Indomethacin is riskiest.</td><td>Acetaminophen (Tylenol), topical capsaicin, lidocaine patches, SNRIs for nerve pain. Short-term NSAIDs <em>may</em> be ok if no heart/kidney issues.</td></tr>
+                                <tr><td>Benzodiazepines (e.g., Xanax, Ativan, Valium, Klonopin, Restoril)</td><td>High risk of falls, delirium, oversedation. Addictive. Effects last longer in older adults. Risky with opioids.</td><td>For anxiety: Buspirone, SSRIs. For sleep: non-drug options, melatonin, trazodone.</td></tr>
+                                <tr><td>Muscle Relaxants (e.g., Flexeril, Robaxin)</td><td>Often anticholinergic. Cause drowsiness, weakness, falls.</td><td>Tylenol, short-term NSAIDs (cautiously), stretching, heat/cold, physical therapy.</td></tr>
+                                <tr><td>Estrogen Pills/Patches</td><td>Increased risk of breast/endometrial cancer, blood clots, stroke, heart attack in older women.</td><td>Gabapentin, SNRIs, SSRIs for hot flashes. Vaginal estrogen may be ok for local symptoms.</td></tr>
+                                <tr><td>Barbiturates (e.g., Phenobarbital)</td><td>High risk of dependence, overdose, sedation.</td><td>Newer anticonvulsants for epilepsy. Non-drug/other meds for sleep/anxiety.</td></tr>
+                                <tr><td>Long-Acting Sulfonylureas (e.g., Glimepiride (Amaryl), Glyburide)</td><td>Risk of severe, long-lasting low blood sugar (hypoglycemia), stroke, death.</td><td>Shorter-acting sulfonylureas (Glipizide), other diabetes meds.</td></tr>
+                                <tr><td>"Z-drugs" (e.g., Ambien, Lunesta, Sonata)</td><td>Increase risk of falls, delirium, ER visits, crashes. Minimal sleep benefit.</td><td>Non-drug options, melatonin, trazodone.</td></tr>
+                                <tr><td>Antipsychotics (for dementia psychosis) (e.g., Haldol, Zyprexa, Seroquel, Risperdal)</td><td>Increased risk of stroke and death in dementia patients. Cause drowsiness, movement issues.</td><td>Non-drug behavioral interventions. If needed, lowest dose/shortest time with careful watch.</td></tr>
+                                <tr><td>Proton-Pump Inhibitors (PPIs) (e.g., Prilosec, Prevacid, Nexium)</td><td>Long-term use risks <em>C. diff</em> diarrhea, bone loss/fractures, B-12 deficiency.</td><td>Lowest dose/shortest time. Lifestyle changes. H2 blockers (Pepcid) for milder symptoms.</td></tr>
+                                <tr><td>Meperidine (Demerol)</td><td>Can cause confusion/seizures. All opioids carry risks.</td><td>Other opioids (cautiously), Tylenol, non-drug pain management.</td></tr>
+                                <tr><td>Gabapentinoids (e.g., Gabapentin (Neurontin), Pregabalin (Lyrica))</td><td>Harmful effects, especially with opioids. Drowsiness, balance loss.</td><td>Non-drug pain management, other nerve pain treatments.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p><em>Note: This table is not all-inclusive. Always consult a healthcare provider for personalized advice.</em></p>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="chapter3" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Chapter 3: Finding Cheaper Drug Prices</h2>
+                    <div class="key-takeaways">
+                        <h4>Key Takeaways:</h4>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Don't skip medications due to cost; many assistance programs exist.</li>
+                            <li>Always ask for generic options and compare prices using tools like GoodRx.</li>
+                            <li>Explore cash-pay options or pharmacy programs – they can sometimes be cheaper than insurance.</li>
+                            <li>Talk openly with your healthcare team about cost concerns.</li>
+                        </ul>
+                    </div>
+                    <p class="mb-4">Medication costs can be a significant issue, sometimes leading individuals to skip doses. Fortunately, options exist to help lower these costs.</p>
+                    <h3 class="text-xl font-semibold mb-3">Government and Non-Profit Programs:</h3>
+                    <ul class="list-disc list-inside mb-4 space-y-2">
+                        <li><strong>Extra Help (Low-Income Subsidy):</strong> A federal program assisting Medicare users with limited income in paying for Part D drug costs. Enrollment may be automatic, or an application via Social Security may be required.</li>
+                        <li><strong>Medicare Savings Programs (MSPs):</strong> State programs that help pay Medicare Part A/B costs, thereby freeing up funds for medications.</li>
+                        <li><strong>State Pharmaceutical Assistance Programs (SPAPs):</strong> Many states offer these programs to help cover Medicare Part D costs not paid by Medicare.</li>
+                        <li><strong>Charitable Foundations:</strong> Organizations like the PAN Foundation assist eligible patients with out-of-pocket medication costs.</li>
+                        <li><strong>FundFinder:</strong> A free web application from the PAN Foundation that helps locate assistance from over 200 programs.</li>
+                    </ul>
+                    <h3 class="text-xl font-semibold mb-3">Private Sector and General Strategies:</h3>
+                    <ul class="list-disc list-inside mb-4 space-y-2">
+                        <li><strong>Manufacturer Programs (PAPs):</strong> Drug companies often have programs offering free or low-cost medications, though rules can be strict for Medicare users. Check company websites or NeedyMeds.org for information.</li>
+                        <li><strong>Choose Generic Drugs:</strong> Generics contain the same active ingredient and work identically to brand-name drugs but often cost 80-85% less. Always inquire if a generic alternative is available.</li>
+                        <li><strong>Prescription Discount Cards/Apps (e.g., GoodRx, SingleCare):</strong> These services provide coupons and price comparisons across pharmacies, often resulting in significant savings, especially for those without insurance or with high deductibles. Their websites or apps can be used to find the best local prices.</li>
+                        <li><strong>Pharmacy Price Matching:</strong> Some pharmacies may match or accept prices from discount cards like GoodRx, even if not directly contracted. It is always worthwhile to ask your pharmacist if they can match a lower price you have found.</li>
+                        <li><strong>Costco Pharmacy:</strong> A Costco membership is not required to use their pharmacy and benefit from their prescription prices. Simply inform the door attendant that you are going to the pharmacy. (This tip often appears on consumer sites).</li>
+                        <li><strong>Pill Splitting:</strong> If approved by your doctor, splitting a higher-dose pill can reduce costs. This should only be done with medical guidance.</li>
+                        <li><strong>Combination Pills:</strong> Inquire if multiple medications can be combined into a single pill, potentially lowering co-pays.</li>
+                        <li><strong>Buy in Bulk/Mail-Order:</strong> Mail-order pharmacies might offer larger supplies for less money. Many pharmacies and health plans offer home delivery for prescriptions. Services like PillPack (by Amazon Pharmacy) ship medications already sorted into daily packets, which can replace traditional pill organizers and eliminate trips to pick up refills.</li>
+                        <li><strong>Talk to Your Doctor/Pharmacist:</strong> If cost is an issue, inform them. They may be aware of cheaper alternatives or assistance programs.</li>
+                    </ul>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="chapter4" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Chapter 4: Resources for Adherence and Management</h2>
+                    <div class="key-takeaways">
+                        <h4>Key Takeaways:</h4>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Taking medications correctly is key to managing health conditions.</li>
+                            <li>Use tools like pill organizers, apps, and calendars to help remember doses.</li>
+                            <li>Simplify your regimen with your doctor whenever possible.</li>
+                            <li>Educate yourself about your medications and don't hesitate to ask for help.</li>
+                        </ul>
+                    </div>
+                    <p class="mb-4">Taking medications as prescribed (adherence) is vital, especially for older adults with chronic conditions. Complex schedules, memory issues, and cost can make adherence challenging. Remembering to take medicine on time is crucial for it to work properly. Fortunately, many medication reminder tools – both high-tech and low-tech – can help remember doses and “check off” that they were taken.</p>
+                    <h3 class="text-xl font-semibold mb-3">4.1 Strategies for Medication Adherence</h3>
+                    <ul class="list-disc list-inside mb-4 space-y-2">
+                        <li><strong>Simplify Regimens:</strong> Doctors can help by discontinuing unneeded drugs (deprescribing) and choosing once-daily options when feasible.</li>
+                        <li><strong>Regular Medication Reviews:</strong> Have all your medicines (prescriptions, OTC, supplements) reviewed by a healthcare professional to identify potential problems.</li>
+                        <li><strong>Involve Caregivers:</strong> Family members or caregivers can assist with organizing pills, setting reminders, and communicating with doctors.</li>
+                        <li><strong>Routine and Habit Cues:</strong> Link taking medication with daily routines.</li>
+                        <li><strong>Family or Buddy System:</strong> A quick daily phone call can be a helpful reminder.</li>
+                        <li><strong>Keep an Updated Medication List:</strong> Maintain an updated medication list in a visible place.</li>
+                        <li><strong>Accessibility Tip:</strong> Keep medications in an easy-to-reach location.</li>
+                    </ul>
+                    <h3 class="text-xl font-semibold mb-3">4.2 Tools and Technologies for Reminders and Management</h3>
+                    <p class="mb-4">Many tools can help manage medications effectively:</p>
+                    <h4 class="text-lg font-semibold mb-2">Digital Reminder Solutions:</h4>
+                    <ul class="list-disc list-inside mb-4 space-y-2">
+                        <li><strong>Medication Management Apps:</strong> Apps like MyTherapy, EveryDose, Dosecast, and Mango Health send reminders.</li>
+                        <li><strong>Voice-Activated Assistants:</strong> Siri, Alexa, Google Assistant can provide audible reminders.</li>
+                        <li><strong>Electronic Pill Dispensers and Smart Caps:</strong> Devices like MedMinder or Pria can dispense pills or track doses.</li>
+                    </ul>
+                    <h4 class="text-lg font-semibold mb-2">Non-Digital (Low-Tech) Reminder Solutions:</h4>
+                     <ul class="list-disc list-inside mb-4 space-y-2">
+                        <li><strong>Physical Tools:</strong> Pill Organizer Boxes, Smart Pill Dispensers, Personalized Packaging, Easy-Open Packaging.</li>
+                        <li><strong>Visual Reminders:</strong> Calendars/Charts, Checklists.</li>
+                        <li><strong>Sticky Notes and Signs.</strong></li>
+                        <li><strong>Digital Calendars (on phones/computers).</strong></li>
+                    </ul>
+                    <h4 class="text-lg font-semibold mb-2">Other Support:</h4>
+                    <ul class="list-disc list-inside mb-4 space-y-2">
+                        <li><strong>Home Health Services:</strong> Aides can provide reminders.</li>
+                        <li><strong>Delivery & Refills:</strong> Utilize pharmacy delivery and automatic refills.</li>
+                        <li><strong>Free Informational Websites:</strong> NIA, MedlinePlus, NCCIH.</li>
+                    </ul>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="chapter5" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Chapter 5: Brand vs. Generic Medications: Understanding the Differences</h2>
+                    <div class="key-takeaways">
+                        <h4>Key Takeaways:</h4>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Generic drugs are as safe and effective as brand-name drugs, according to the FDA.</li>
+                            <li>Generics look different due to trademark laws, not because of differences in the medicine itself.</li>
+                            <li>Choosing generics can lead to significant cost savings.</li>
+                            <li>If your pill's appearance changes, always ask your pharmacist to confirm it's the correct medication.</li>
+                        </ul>
+                    </div>
+                     <div class="did-you-know">
+                        <h4>Did you know?</h4>
+                        <p>Generic drugs are required by the FDA to have the same active ingredient, strength, and dosage form as their brand-name counterparts. They often cost 80-85% less simply because their manufacturers didn't have to pay for the initial discovery and large clinical trials!</p>
+                    </div>
+                    <p class="mb-4 mt-6">Choosing between brand and generic drugs often raises questions about quality, effectiveness, and cost. For example, Lipitor is a brand name for a cholesterol drug; its generic name is atorvastatin.</p>
+                    <h3 class="text-xl font-semibold mb-3">5.1 Effectiveness and FDA Standards for Generic Drugs</h3>
+                    <p class="mb-4">All generic drugs in the U.S. must be approved by the FDA (Food & Drug Administration) as equivalent to their brand-name counterparts. The FDA mandates that "FDA-approved generic medicines work in the same way and provide the same clinical benefit and risks as their brand-name counterparts."</p>
+                    <h3 class="text-xl font-semibold mb-3">5.2 Why Patients May Feel a Brand Works Better or Why Pill Appearance Differs</h3>
+                    <p class="mb-4">Despite scientific confirmation of equivalence, some individuals prefer brand-name drugs. Reasons include marketing, psychological factors (placebo/nocebo effect due to different appearance), or rare sensitivities to different inactive ingredients. Pill color and shape differ primarily due to trademark laws.</p>
+                    <h3 class="text-xl font-semibold mb-3">5.3 When a Brand-Name Medication Might Be Necessary</h3>
+                    <p class="mb-4">Occasionally, a brand-name drug might be medically necessary (e.g., allergy to a generic's inactive ingredient). This usually requires a doctor's "Dispense as Written" (DAW) prescription and prior authorization from insurance, and can involve higher costs.</p>
+                    <p><strong>Bottom line:</strong> For most, generics are equally effective and save money. Discuss concerns with your doctor.</p>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="chapter6" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Chapter 6: Concerns of Addiction to Prescription Drugs</h2>
+                     <div class="key-takeaways">
+                        <h4>Key Takeaways:</h4>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Be aware of addiction risks, particularly with opioids and benzodiazepines.</li>
+                            <li>Understanding DEA schedules helps in managing risks and handling medications safely.</li>
+                            <li>Never share controlled substances.</li>
+                            <li>Utilize drug take-back programs for disposal; flush Fentanyl patches (folded) and other "Flush List" drugs only if no take-back option is available.</li>
+                        </ul>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">6.1 Identifying Addiction Concerns in Older Adults</h3>
+                    <p class="mb-4">Prescription drug misuse in older adults can be accidental. Factors include polypharmacy, age-related changes in drug processing, and using medications to cope. Opioids and benzodiazepines are commonly misused. Warning signs can mimic aging (irritability, confusion, falls, prescription-seeking).</p>
+                    <h3 class="text-xl font-semibold mb-3">6.2 DEA Drug Schedules</h3>
+                    <p class="mb-4">The DEA categorizes drugs with abuse potential into five Schedules (I-V). Lower numbers mean higher risk.</p>
+                    <ul class="list-disc list-inside mb-4 space-y-1">
+                        <li><strong>Schedule I:</strong> High abuse, no accepted medical use (e.g., Heroin, LSD).</li>
+                        <li><strong>Schedule II:</strong> High abuse, accepted medical use (e.g., Fentanyl, Oxycodone). Strict rules.</li>
+                        <li><strong>Schedule III:</strong> Moderate/low dependence (e.g., Tylenol with Codeine).</li>
+                        <li><strong>Schedule IV:</strong> Low abuse/dependence (e.g., Xanax, Valium).</li>
+                        <li><strong>Schedule V:</strong> Lowest abuse potential (e.g., Lyrica, some cough syrups).</li>
+                    </ul>
+                    <h3 class="text-xl font-semibold mb-3">6.3 Why Understanding DEA Schedules Matters</h3>
+                    <p class="mb-4">Knowing a drug's schedule helps manage it safely: risk awareness, secure storage, understanding regulations, and open communication with doctors.</p>
+                    <h3 class="text-xl font-semibold mb-3">6.4 Safe Disposal of Controlled Substances</h3>
+                    <p class="mb-4"><strong>Best Option: Drug Take-Back Programs</strong> (pharmacies, hospitals, police stations, DEA Take-Back Days). Patches like Fentanyl should be folded sticky-sides together and flushed if no take-back option is readily available (check FDA Flush List). For other non-flush list drugs, mix with unappealing substances (coffee grounds, kitty litter), seal, and trash if no take-back. Never share controlled substances.</p>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="chapter7" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Chapter 7: Polypharmacy and Medication Review</h2>
+                    <div class="key-takeaways">
+                        <h4>Key Takeaways:</h4>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Taking many medications (polypharmacy) increases health risks.</li>
+                            <li>Regular medication reviews with your doctor or pharmacist are essential.</li>
+                            <li>Keep an accurate, updated medication list and share it at every medical visit.</li>
+                            <li>Be aware of medication reconciliation during transitions of care (e.g., hospital discharge).</li>
+                        </ul>
+                    </div>
+                    <div class="did-you-know">
+                        <h4>Did you know?</h4>
+                        <p>Taking five or more medications daily (polypharmacy) is common in older adults and significantly increases the risk of harmful drug interactions, side effects, and even falls. An annual medication review can help identify and stop unnecessary drugs.</p>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 mt-6">7.1 Understanding Polypharmacy and Pill Burden</h3>
+                    <p class="mb-4">Polypharmacy (five or more medicines) is common in older adults. "Pill burden" is the total effort of managing these medications, which can be overwhelming.</p>
+                    <h3 class="text-xl font-semibold mb-3">7.2 Risks and Importance of Regular Medication Review</h3>
+                    <p class="mb-4">Polypharmacy risks include Adverse Drug Events (ADEs), drug interactions, cognitive/functional decline, falls, lower adherence, and higher healthcare costs. Regular medication reviews (at least annually, or after hospitalizations) by a doctor or pharmacist are essential to reduce inappropriate medications, improve adherence, prevent adverse reactions, and optimize treatment. Always bring all medication bottles or an updated list to appointments.</p>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="chapter8" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Chapter 8: Options for Those Who Can't Swallow Hard Pills and Capsules</h2>
+                    <div class="key-takeaways">
+                        <h4>Key Takeaways:</h4>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Your pharmacist is a key resource—ask them questions!</li>
+                            <li>Never crush or chew pills unless your pharmacist explicitly states it is safe to do so.</li>
+                            <li>If swallowing is difficult, inquire about liquid formulations, patches, or compounding services.</li>
+                        </ul>
+                    </div>
+                    <p class="mb-4">Difficulty swallowing pills (dysphagia) is common and needs proper management.</p>
+                    <h3 class="text-xl font-semibold mb-3">8.1 Compounding Pharmacy Services</h3>
+                    <p class="mb-4">Compounding pharmacies can create personalized medications: liquid versions, different forms (creams, lozenges), adjusted doses, or formulations without allergens. Use under a doctor's prescription when FDA-approved options aren't suitable.</p>
+                    <h3 class="text-xl font-semibold mb-3">8.2 Medications Never to Crush or Chew</h3>
+                    <p class="mb-4">Crushing certain pills can be dangerous, causing overdose, side effects, irritation, or ineffectiveness. <strong>Always ask your pharmacist first.</strong></p>
+                    <p class="mb-4">Types to generally NEVER crush/chew:</p>
+                    <div class="overflow-x-auto">
+                        <table>
+                            <thead><tr><th>Medication Type/Formulation</th><th>Rationale</th><th>Examples</th></tr></thead>
+                            <tbody>
+                                <tr><td>Extended-Release (ER, XR, etc.)</td><td>Releases drug slowly; crushing causes rapid overdose.</td><td>Nifedipine ER, Metformin XR</td></tr>
+                                <tr><td>Enteric-Coated (EC)</td><td>Protects drug from stomach acid or stomach from drug. Crushing destroys coating.</td><td>Omeprazole, Aspirin EC</td></tr>
+                                <tr><td>Capsules with Beads/Pellets</td><td>Beads are often timed-release.</td><td>Duloxetine</td></tr>
+                                <tr><td>Sublingual (SL) or Buccal</td><td>Absorbed under tongue/in cheek. Crushing alters absorption.</td><td>Nitroglycerin SL</td></tr>
+                                <tr><td>Film/Sugar-Coated (taste/protection)</td><td>Coating masks taste or protects drug.</td><td>Montelukast, Sertraline</td></tr>
+                                <tr><td>Liquid-Filled Capsules</td><td>Opening can lead to incorrect dose/spillage.</td><td>Dutasteride</td></tr>
+                                <tr><td>Cytotoxic/Hormonal (Hazardous)</td><td>Particles harmful if inhaled/contact skin.</td><td>Methotrexate, Finasteride</td></tr>
+                                <tr><td>Narrow Therapeutic Window Drugs</td><td>Small dose changes can be toxic/ineffective.</td><td>Phenytoin, Digoxin, Warfarin</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">8.3 Alternative Drug Formulations</h3>
+                    <p class="mb-4">Discuss with doctor/pharmacist: soluble/dispersible tablets, oral liquids, transdermal patches, suppositories, injectable medications.</p>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="chapter9" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Chapter 9: OTC Buying Guide for Geriatrics</h2>
+                     <div class="key-takeaways">
+                        <h4>Key Takeaways:</h4>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Always consult a healthcare professional before taking any new OTC product, vitamin, or herb.</li>
+                            <li>Read "Drug Facts" labels carefully to avoid duplicate ingredients and identify potentially inappropriate substances for older adults.</li>
+                            <li>Be especially cautious with first-generation antihistamines and the long-term use of NSAIDs and PPIs.</li>
+                            <li>"Natural" does not automatically mean safe; discuss herbal products and supplements with your provider as they can have side effects and interactions.</li>
+                        </ul>
+                    </div>
+                    <p class="mb-4">Older adults need extra caution with OTC products due to risks, sensitivity, and interactions.</p>
+                    <h3 class="text-xl font-semibold mb-3">9.1 General Principles for OTC Use</h3>
+                    <ul class="list-disc list-inside mb-4 space-y-1">
+                        <li><strong>Consult First:</strong> Talk to your doctor/pharmacist before any new OTC/vitamin/herb.</li>
+                        <li><strong>Read Labels:</strong> Understand active ingredients, uses, warnings.</li>
+                        <li><strong>Avoid Duplicate Ingredients:</strong> Prevent overdose from multi-symptom products.</li>
+                        <li><strong>Treat Only Your Symptoms:</strong> Avoid combination products if not all symptoms are present.</li>
+                        <li><strong>Keep a Comprehensive Medication List.</strong></li>
+                        <li><strong>Herbal/"Natural" Caution:</strong> Not FDA regulated like drugs; can have side effects/interactions.</li>
+                        <li><strong>Watch for Overlaps:</strong> E.g., Pepto-Bismol (salicylate) + Aspirin = bleeding risk. Avoid first-gen antihistamines in cold/sleep aids.</li>
+                    </ul>
+                    <h3 class="text-xl font-semibold mb-3">9.2 Common Symptoms, What to Avoid, and Safer Alternatives</h3>
+                    <p class="mb-4">The following is general advice; consult a professional for personalized recommendations.</p>
+                    <div class="overflow-x-auto">
+                        <table>
+                            <thead><tr><th>Symptom</th><th>Avoid/Caution</th><th>Safer Alternatives</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>Pain</strong></td><td>Long-term/high-dose NSAIDs (Ibuprofen, Naproxen).</td><td>Acetaminophen (Tylenol), topical analgesics. Non-drug: heat/cold, PT.</td></tr>
+                                <tr><td><strong>Allergies/Cold</strong></td><td>First-gen oral antihistamines (Benadryl). Oral decongestants (Sudafed) if heart/BP issues.</td><td>Second-gen antihistamines (Claritin, Zyrtec), saline spray, nasal steroids (Flonase).</td></tr>
+                                <tr><td><strong>Cough</strong></td><td>Combination syrups with first-gen antihistamines.</td><td>Dextromethorphan (Delsym), Guaifenesin (Mucinex). Natural: honey, humidifier.</td></tr>
+                                <tr><td><strong>Mucus/Phlegm</strong></td><td>First-gen antihistamines (thicken mucus).</td><td>Guaifenesin (Mucinex). Natural: hydration, steam.</td></tr>
+                                <tr><td><strong>Heartburn</strong></td><td>Long-term daily PPIs (Prilosec OTC) without medical supervision.</td><td>Antacids (Tums), H2 blockers (Pepcid AC). Lifestyle changes.</td></tr>
+                                <tr><td><strong>Constipation</strong></td><td>Overuse of stimulant laxatives (Dulcolax, Senna).</td><td>Bulk-forming (Metamucil), stool softeners (Colace), osmotic (MiraLAX). Natural: fiber, fluids, activity.</td></tr>
+                                <tr><td><strong>Diarrhea</strong></td><td>Antacids with magnesium.</td><td>Loperamide (Imodium), Bismuth subsalicylate (Pepto-Bismol). Natural: probiotics, BRAT diet.</td></tr>
+                                <tr><td><strong>Eyes (Itchy/Dry)</strong></td><td>Long-term red eye relief drops (Visine).</td><td>Artificial tears (Refresh), antihistamine eye drops (Zaditor).</td></tr>
+                                <tr><td><strong>Ears (Water/Wax)</strong></td><td></td><td>Drying ear drops for water; Carbamide peroxide (Debrox) for wax. No cotton swabs.</td></tr>
+                                <tr><td><strong>Nail Fungus</strong></td><td>OTC antifungals (often treat skin, not nail).</td><td>OTC topicals (Clotrimazole for skin), Urea products for nail appearance. Prescription needed for cure.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">9.3 When to Seek Medical Care</h3>
+                    <p class="mb-4">Distinguish self-care from needing professional help. Severe, worsening, or unexplained symptoms need a doctor's visit. Older adults may have atypical symptoms.</p>
+                    <ul class="list-disc list-inside mb-4 space-y-1">
+                        <li><strong>Manage at Home:</strong> Mild symptoms (common cold, minor headache) that respond to OTCs/rest. Mild, non-dangerous side effects.</li>
+                        <li><strong>Urgent Care/Call Doctor:</strong> Moderate illness/minor injury (ear/UTI infection, bronchitis, minor sprain). Concerning medication reaction (non-life-threatening rash). Fever >101°F for >2-3 days.</li>
+                        <li><strong>Emergency Room (911):</strong> Severe, sudden, life-threatening symptoms: Chest pain/pressure, shortness of breath, stroke (F.A.S.T.), seizure, severe abdominal pain, uncontrolled bleeding, significant trauma, severe allergic reaction, high fever with serious symptoms, severe dehydration. Extreme unwellness after medication.</li>
+                    </ul>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="chapter10" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Chapter 10: Beers Criteria List of Drugs: Rationale and Alternatives</h2>
+                    <p class="mb-4">The AGS Beers Criteria® lists potentially inappropriate medications for older adults. It's a guide, not a strict prohibition. Decisions are individualized.</p>
+                    <div class="my-4">
+                        <input type="text" id="drugSearchInput" placeholder="Search for a drug in this list..." class="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table id="beersTable">
+                            <thead>
+                                <tr>
+                                    <th>Medication Class/Examples</th>
+                                    <th>Rationale for Concern</th>
+                                    <th>Alternative/Recommendations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Antihistamines, First-Generation</strong> (e.g., Diphenhydramine (Benadryl), Chlorpheniramine, Doxylamine, Hydroxyzine, Meclizine)</td><td>Highly anticholinergic; confusion, dry mouth, constipation, falls. Dementia risk.</td><td>Allergies: Saline spray, nasal corticosteroids, second-gen antihistamines (Loratadine, Cetirizine). Insomnia: Non-drug options, Melatonin, Trazodone.</td></tr>
+                                <tr><td><strong>Antidepressants (Strongly Anticholinergic)</strong> (e.g., Amitriptyline, Nortriptyline, Paroxetine)</td><td>Highly anticholinergic/sedating. Falls, constipation, cognitive issues.</td><td>SSRIs (Sertraline, Citalopram), SNRIs (Venlafaxine, Duloxetine), Bupropion.</td></tr>
+                                <tr><td><strong>Antipsychotics (for behavioral problems of dementia/delirium)</strong> (e.g., Haloperidol, Risperidone, Olanzapine, Quetiapine)</td><td>Increased stroke/mortality risk in dementia. Sedation, falls.</td><td>Non-drug interventions first. If needed, lowest dose/shortest time.</td></tr>
+                                <tr><td><strong>Barbiturates</strong> (e.g., Phenobarbital, Butalbital)</td><td>High dependence/overdose risk. Sedating.</td><td>Epilepsy: Newer anticonvulsants. Sleep/anxiety: Non-drug/other meds.</td></tr>
+                                <tr><td><strong>Benzodiazepines</strong> (e.g., Alprazolam (Xanax), Lorazepam (Ativan), Diazepam (Valium))</td><td>Cognitive impairment, delirium, falls, fractures. Dependence. Risky with opioids.</td><td>Anxiety: SSRIs, SNRIs, Buspirone, CBT. Insomnia: Non-drug, Melatonin, Trazodone.</td></tr>
+                                <tr><td><strong>NSAIDs (Oral, Non-COX-selective)</strong> (e.g., Ibuprofen, Naproxen, Indomethacin)</td><td>GI bleeding/ulcers, kidney injury, exacerbates heart failure, increases BP.</td><td>Acetaminophen. Topical NSAIDs. Non-drug. If NSAID needed: lowest dose/shortest time, gastroprotection.</td></tr>
+                                <tr><td><strong>Skeletal Muscle Relaxants</strong> (e.g., Cyclobenzaprine (Flexeril), Carisoprodol)</td><td>Anticholinergic, sedation, dizziness, falls. Questionable efficacy.</td><td>Acetaminophen. Non-drug (heat/cold, PT).</td></tr>
+                                <tr><td><strong>"Z-drugs" (Nonbenzodiazepine Hypnotics)</strong> (e.g., Zolpidem (Ambien), Eszopiclone (Lunesta))</td><td>Similar risks to benzodiazepines (delirium, falls). Minimal sleep benefit.</td><td>Non-drug options first. Melatonin, Trazodone.</td></tr>
+                                <tr><td><strong>Digoxin (first-line for A-fib/heart failure, doses >0.125mg/day)</strong></td><td>Higher doses: no added benefit, increased toxicity risk.</td><td>Maintain dose ≤0.125 mg/day if used. Monitor. Consider alternatives.</td></tr>
+                                <tr><td><strong>Aspirin for Primary Prevention of CVD/Colorectal Cancer</strong></td><td>Bleeding risk increases with age. Benefit vs. harm unclear in many >70.</td><td>Individualized decision. Generally for secondary prevention or select high-risk primary.</td></tr>
+                                <tr><td><strong>Proton-Pump Inhibitors (PPIs) (Scheduled use >8 weeks)</strong> (e.g., Omeprazole (Prilosec), Lansoprazole)</td><td>Risk of C. diff, fractures, B12 deficiency, hypomagnesemia.</td><td>Lowest dose/shortest time. Taper if appropriate. Lifestyle changes, H2 blockers (Famotidine).</td></tr>
+                                <tr><td><strong>Long-Acting Sulfonylureas</strong> (e.g., Glimepiride, Glyburide)</td><td>High risk of severe, prolonged hypoglycemia.</td><td>Shorter-acting (Glipizide). Other diabetes meds often preferred.</td></tr>
+                                <tr><td><strong>Rivaroxaban (Xarelto) for long-term A-fib/VTE (Dabigatran also noted)</strong></td><td>Higher bleeding risk vs. warfarin/other DOACs in some older adults (≥75, renal issues).</td><td>Other DOACs (Apixaban, Edoxaban) may be safer. Warfarin. Individualized.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p><em>Note: This list is not exhaustive. Consult the current AGS Beers Criteria® and your provider.</em></p>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="chapter11" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Chapter 11: Antibiotic Use: Finish the Course and Use Wisely</h2>
+                    <p class="mb-4">Correct antibiotic use is critical for treating bacterial infections and preventing resistance.</p>
+                    <h3 class="text-xl font-semibold mb-3">Key Principles:</h3>
+                    <ul class="list-disc list-inside mb-4 space-y-1">
+                        <li><strong>Always finish the full prescribed course,</strong> even if feeling better.</li>
+                        <li><strong>Do not skip doses.</strong></li>
+                        <li><strong>Understand misuse consequences:</strong> Contributes to antibiotic resistance ("superbugs"), can destroy beneficial bacteria (e.g., leading to C. diff).</li>
+                        <li><strong>Use only for bacterial infections:</strong> Ineffective against viruses (colds, flu).</li>
+                        <li><strong>Never use leftover antibiotics or someone else’s.</strong></li>
+                        <li><strong>Be aware of side effects/interactions.</strong> Report concerning reactions.</li>
+                    </ul>
+                    <h3 class="text-xl font-semibold mb-3">Preventing Antibiotic Resistance:</h3>
+                    <ul class="list-disc list-inside mb-4 space-y-1">
+                        <li>Use only when prescribed and as directed.</li>
+                        <li>Don't demand antibiotics if not needed.</li>
+                        <li>Keep up with vaccinations.</li>
+                        <li>Practice good hygiene.</li>
+                    </ul>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="chapter12" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Chapter 12: Free and Reliable Medical Information Resources (U.S.)</h2>
+                    <p class="mb-4">Obtain medical information from trustworthy U.S.-based sources:</p>
+                    <ul class="list-disc list-inside mb-4 space-y-2">
+                        <li><strong>MedlinePlus (NIH/NLM):</strong> <a href="https://medlineplus.gov" target="_blank" class="text-indigo-600 hover:underline">medlineplus.gov</a> (health topics, drug info).</li>
+                        <li><strong>Mayo Clinic:</strong> <a href="https://www.mayoclinic.org" target="_blank" class="text-indigo-600 hover:underline">mayoclinic.org</a> (disease guides, symptom checker).</li>
+                        <li><strong>Centers for Disease Control and Prevention (CDC):</strong> <a href="https://www.cdc.gov" target="_blank" class="text-indigo-600 hover:underline">cdc.gov</a> (diseases, vaccines, public health).</li>
+                        <li><strong>Merck Manual (Consumer Version):</strong> <a href="https://www.merckmanuals.com/home" target="_blank" class="text-indigo-600 hover:underline">merckmanuals.com/home</a> (medical conditions explained).</li>
+                        <li><strong>FamilyDoctor.org (AAFP):</strong> <a href="https://familydoctor.org" target="_blank" class="text-indigo-600 hover:underline">familydoctor.org</a> (health info for all ages).</li>
+                        <li><strong>NIH Health Information:</strong> <a href="https://health.nih.gov" target="_blank" class="text-indigo-600 hover:underline">health.nih.gov</a> (links to various NIH institutes).</li>
+                    </ul>
+                    <p><strong>Note:</strong> Online information is general, not a substitute for professional medical advice. Consult your provider for any health decisions.</p>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="conclusion" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Conclusion</h2>
+                    <p class="mb-4">Effective medication management in older adulthood is key to health and quality of life. This guide covered risks (e.g., Benadryl), safer choices (Beers Criteria), cost management, adherence, brand vs. generic, addiction concerns, safe disposal, and the importance of medication reviews to combat polypharmacy.</p>
+                    <p class="mb-4">This is a collaborative effort. Providers must personalize care and educate. Patients/caregivers must ask questions and participate in decisions.</p>
+                    <p>Informed individuals can use medications more safely, leading to better health outcomes.</p>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="glossary" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">Glossary</h2>
+                    <ul class="space-y-3">
+                        <li><strong>Adherence:</strong> Taking medicines exactly as prescribed.</li>
+                        <li><strong>Adverse Drug Event (ADE):</strong> Harm from medicine use.</li>
+                        <li><strong>Active Pharmaceutical Ingredient (API):</strong> Therapeutic component.</li>
+                        <li><strong>Anticholinergic:</strong> Drugs blocking acetylcholine; can cause dry mouth, confusion, etc.</li>
+                        <li><strong>Anticholinergic Burden:</strong> Cumulative effect of anticholinergic drugs.</li>
+                        <li><strong>Beers Criteria®:</strong> List of potentially inappropriate meds for older adults.</li>
+                        <li><strong>Bioequivalence:</strong> Generic delivers same amount of drug as brand.</li>
+                        <li><strong>Brand-name Drug:</strong> Original drug under trademarked name.</li>
+                        <li><strong>Compounding Pharmacy:</strong> Prepares customized medications.</li>
+                        <li><strong>Controlled Substance:</strong> Regulated drug due to abuse potential.</li>
+                        <li><strong>DEA Schedules:</strong> Classification of controlled substances.</li>
+                        <li><strong>Deprescribing:</strong> Planned reduction/stopping of meds.</li>
+                        <li><strong>Drug-Drug Interaction:</strong> One drug affects another.</li>
+                        <li><strong>Dysphagia:</strong> Difficulty swallowing.</li>
+                        <li><strong>Enteric-Coated (EC):</strong> Coating to prevent stomach dissolution.</li>
+                        <li><strong>Extended-Release (ER, XR, etc.):</strong> Slow medication release.</li>
+                        <li><strong>FDA:</strong> U.S. Food and Drug Administration.</li>
+                        <li><strong>Generic Drug:</strong> Same as brand-name in form, safety, strength, etc.</li>
+                        <li><strong>Hypoglycemia:</strong> Low blood sugar.</li>
+                        <li><strong>OTC (Over-the-Counter):</strong> Meds without prescription.</li>
+                        <li><strong>Pill Burden:</strong> Total pills and management effort.</li>
+                        <li><strong>Polypharmacy:</strong> Use of multiple (often ≥5) medications.</li>
+                        <li><strong>Sublingual (SL):</strong> Medication dissolved under tongue.</li>
+                    </ul>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+
+                <section id="references" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">References</h2>
+                    <p class="mb-2 text-sm text-gray-600">The following references are based on APA 7th edition guidelines, filtered to exclude Wikipedia and certain commercial sites. (n.d.) indicates no date was provided in the original list.</p>
+                    <ul class="space-y-2 text-sm text-xs break-words">
+                        <li>Administration for Community Living. (n.d.). *Managing medications for older adults*. Acl.gov.</li>
+                        <li>American Academy of Family Physicians. (2018). *Trouble swallowing pills? Try these tips*. Familydoctor.org.</li>
+                        <li>American Academy of Family Physicians. (n.d.). *Chronic constipation in adults*. Aafp.org.</li>
+                        <li>American Academy of Ophthalmology. (2021a). *Allergic conjunctivitis*. Aao.org.</li>
+                        <li>American Academy of Ophthalmology. (2021b). *What is dry eye?* Aao.org.</li>
+                        <li>American Academy of Otolaryngology—Head and Neck Surgery. (2015). Clinical practice guideline: Adult sinusitis. *Otolaryngology–Head and Neck Surgery, 152*(1_suppl), S1–S43.</li>
+                        <li>American Academy of Otolaryngology—Head and Neck Surgery. (2017). *Earache*. Enthealth.org.</li>
+                        <li>American Academy of Sleep Medicine. (2017). Clinical practice guideline for the pharmacologic treatment of chronic insomnia in adults: An American Academy of Sleep Medicine clinical practice guideline. *Journal of Clinical Sleep Medicine, 13*(2), 307–349.</li>
+                        <li>American College of Gastroenterology. (2017). ACG clinical guideline: Diagnosis and management of gastroesophageal reflux disease. *The American Journal of Gastroenterology, 112*(9), 1240–1256.</li>
+                        <li>American Gastroenterological Association. (2013). AGA medical position statement on constipation. *Gastroenterology, 144*(1), 211–217.</li>
+                        <li>American Geriatrics Society. (2011). AGS clinical practice guideline: Prevention of falls in older persons. *Journal of the American Geriatrics Society, 59*(1), 148–157.</li>
+                        <li>American Geriatrics Society. (2019). American Geriatrics Society 2019 updated AGS Beers Criteria® for potentially inappropriate medication use in older adults. *Journal of the American Geriatrics Society, 67*(4), 674–694.</li>
+                        <li>American Geriatrics Society. (2023). *AGS Beers Criteria® for potentially inappropriate medication use in older adults*. Americangeriatrics.org.</li>
+                        <li>American Lung Association. (2020a). *Cough*. Lung.org.</li>
+                        <li>American Lung Association. (2020b). *Mucus and phlegm*. Lung.org.</li>
+                        <li>American Migraine Foundation. (2020). *Over-the-counter medications for migraine*. Americanmigrainefoundation.org.</li>
+                        <li>American Pharmacists Association. (n.d.). *Your pharmacist can help*. Pharmacist.com.</li>
+                        <li>Arthritis Foundation. (2021). *Pain relief: Over-the-counter medications*. Arthritis.org.</li>
+                        <li>Centers for Disease Control and Prevention. (2020). *Common colds: Protect yourself and others*. Cdc.gov.</li>
+                        <li>Centers for Disease Control and Prevention. (2021a). *Cough*. Cdc.gov.</li>
+                        <li>Centers for Disease Control and Prevention. (2021b). *Diarrhea*. Cdc.gov.</li>
+                        <li>Cleveland Clinic. (n.d.). *Polyethylene glycol powder (MiraLax®): Uses & side effects*. Clevelandclinic.org.</li>
+                        <li>*Constipation in the elderly*. (n.d.). Albertadoctors.org.</li>
+                        <li>Dinh, H. T., Stuerzlinger, W., & Carpendale, S. (2016). Usability of medication reminder applications for older adults: A systematic review. *Journal of Medical Internet Research, 18*(11), e299.</li>
+                        <li>European Medicines Agency. (2013). *Guideline on the use of excipients in the labelling and package leaflet of medicinal products for human use*. Ema.europa.eu.</li>
+                        <li>European Medicines Agency. (2015). *Guideline on the pharmaceutical development of medicines for paediatric use*. Ema.europa.eu.</li>
+                        <li>Gnjidic, D., Le Couteur, D. G., & Hilmer, S. N. (2015). The impact of polypharmacy on cognitive function in older adults. *Therapeutic Advances in Drug Safety, 6*(5), 185–194.</li>
+                        <li>Hanlon, J. T., & Perera, S. (2017). Diphenhydramine use in older adults: A review of the evidence. *Journal of the American Geriatrics Society, 65*(1), 162–167.</li>
+                        <li>Jyrkka, J., Enlund, H., Korhonen, M. J., Sulkava, R., & Hartikainen, S. (2009). Polypharmacy and medication adherence among the elderly. *Drugs & Aging, 26*(11), 937–947.</li>
+                        <li>Kesselheim, A. S., & Gagne, J. J. (2014). The role of pill appearance in medication adherence. *Journal of the American Medical Association, 311*(13), 1340–1341.</li>
+                        <li>Kesselheim, A. S., Gagne, J. J., & Avorn, J. (2014). The effects of pill color and shape on patient adherence to generic medications. *JAMA Internal Medicine, 174*(1), 134–136.</li>
+                        <li>Maher, R. L., Hanlon, J., & Hajjar, E. R. (2014). Clinical consequences of polypharmacy in elderly. *Expert Opinion on Drug Safety, 13*(sup1), 57-65.</li>
+                        <li>Marcum, Z. A., & Hanlon, J. T. (2010). Recognizing and preventing adverse drug reactions in older adults. *Clinics in Geriatric Medicine, 26*(4), 559–572.</li>
+                        <li>Mayo Clinic. (2021a). *Common cold*. Mayoclinic.org.</li>
+                        <li>Mayo Clinic. (2021b). *Earache*. Mayoclinic.org.</li>
+                        <li>Medicare.gov. (n.d.-a). *Extra Help (Low-Income Subsidy)*. Medicare.gov.</li>
+                        <li>Medicare.gov. (n.d.-b). *Ways to save on prescription drugs*. Medicare.gov.</li>
+                        <li>Michigan Medicine - University of Michigan. (2024). *If melatonin isn’t addictive, why can’t I stop taking it?* Medicine.umich.edu.</li>
+                        <li>National Center for Complementary and Integrative Health. (n.d.). *Free web content from NIH (syndication)*. Nccih.nih.gov.</li>
+                        <li>National Center for Complementary and Integrative Health. (2020). *Sleep: An NCCIH health topic*. Nccih.nih.gov.</li>
+                        <li>National Center for Complementary and Integrative Health. (2021). *Melatonin: What you need to know*. Nccih.nih.gov.</li>
+                        <li>National Council on Patient Information and Education. (n.d.). *BeMedWise: Talking to your pharmacist*. Bemedwise.org.</li>
+                        <li>National Institute for Health and Care Excellence. (2017). *Medicines optimisation: Safe and effective use of medicines to improve health outcomes*. Nice.org.uk.</li>
+                        <li>National Institute of Arthritis and Musculoskeletal and Skin Diseases. (2020). *Pain: What you need to know*. Niams.nih.gov.</li>
+                        <li>National Institute of Diabetes and Digestive and Kidney Diseases. (2016). *Diarrhea*. Niddk.nih.gov.</li>
+                        <li>National Institute of Diabetes and Digestive and Kidney Diseases. (2018). *Constipation*. Niddk.nih.gov.</li>
+                        <li>National Institute of Neurological Disorders and Stroke. (2021). *Headache: Hope through research*. Ninds.nih.gov.</li>
+                        <li>National Institute on Aging. (n.d.). *Medication management: What to do when you take many medicines*. Nia.nih.gov.</li>
+                        <li>National Institute on Aging. (2021a). *A good night's sleep*. Nia.nih.gov.</li>
+                        <li>National Institute on Aging. (2021b). *Medications to avoid in older adults*. Nia.nih.gov.</li>
+                        <li>National Institute on Aging. (2021c). *Using over-the-counter medicines safely*. Nia.nih.gov.</li>
+                        <li>National Institute on Drug Abuse. (2017). *Prescription drug misuse in older adults*. Drugabuse.gov.</li>
+                        <li>National Institute on Drug Abuse. (2020). *Substance use in older adults*. Drugabuse.gov.</li>
+                        <li>National Sleep Foundation. (n.d.). *Sleep hygiene*. Thensf.org.</li>
+                        <li>Patient Access Network Foundation. (n.d.). *FundFinder*. Panfoundation.org.</li>
+                        <li>*Preventing errors when drugs are given via enteral feeding tubes*. (n.d.). Pmc.ncbi.nlm.nih.gov.</li>
+                        <li>Qaseem, A., Wilt, T. J., Kansagara, D., & Forciea, M. A. (2016). Management of chronic insomnia disorder in adults: A clinical practice guideline from the American College of Physicians. *Annals of Internal Medicine, 165*(2), 125–133.</li>
+                        <li>Riemann, D., Perlis, M. L., & Espie, C. A. (2020). The cognitive behavioral model of insomnia: A narrative review. *Sleep Medicine Reviews, 51*, 101275.</li>
+                        <li>Royal Pharmaceutical Society. (2019). *The safe use of medicines in patients with swallowing difficulties*. Rpharms.com.</li>
+                        <li>Schiele, J. T., Schneider, H., & Quinzler, R. (2014). Two techniques to make swallowing pills easier. *Annals of Family Medicine, 12*(6), 550–552.</li>
+                        <li>ScriptYourFuture.org. (n.d.). *Get campaign materials*. Scriptyourfuture.org.</li>
+                        <li>Steinman, M. A., & Hanlon, J. T. (2018). The Beers Criteria: A practical guide for clinicians. *JAMA, 319*(18), 1905–1906.</li>
+                        <li>U.S. Department of Veterans Affairs. (n.d.). *Fentanyl transdermal system (TDS) informational summary*. Va.gov.</li>
+                        <li>U.S. Drug Enforcement Administration. (n.d.-a). *Drug schedules*. Dea.gov.</li>
+                        <li>U.S. Drug Enforcement Administration. (n.d.-b). *How to properly dispose of your unused medicines*. Dea.gov.</li>
+                        <li>U.S. Food and Drug Administration. (2015). *Generic drug development, review, and approval*. Fda.gov.</li>
+                        <li>U.S. Food and Drug Administration. (2017a). *Generic drugs: Questions & answers*. Fda.gov.</li>
+                        <li>U.S. Food and Drug Administration. (2017b). *Neti pots: Saline nasal rinses for sinusitis*. Fda.gov.</li>
+                        <li>U.S. Food and Drug Administration. (2018a). *FDA drug safety communication: FDA warns about serious bleeding risk with over-the-counter NSAIDs*. Fda.gov.</li>
+                        <li>U.S. Food and Drug Administration. (2018b). *Generic drug facts*. Fda.gov.</li>
+                        <li>U.S. Food and Drug Administration. (2018c). *Using over-the-counter (OTC) drugs safely*. Fda.gov.</li>
+                        <li>U.S. Food and Drug Administration. (2019). *Generic drugs: Is a generic drug for me?* Fda.gov.</li>
+                        <li>U.S. Food and Drug Administration. (2020). *Generic drug facts*. Fda.gov.</li>
+                        <li>U.S. Food and Drug Administration. (n.d.). *Disposal of unused medicines: What you should know*. Fda.gov.</li>
+                        <li>U.S. Government. (n.d.). *National Center for Complementary and Integrative Health (NCCIH)*. Usa.gov.</li>
+                    </ul>
+                    <div class="chapter-nav-buttons"></div>
+                </section>
+            </div> </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = Array.from(document.querySelectorAll('#navigationMenu .nav-link'));
+            const contentSections = document.querySelectorAll('.content-section');
+            const sidebar = document.getElementById('sidebar');
+            const menuButton = document.getElementById('menuButton');
+            const closeMenuButton = document.getElementById('closeMenuButton');
+            const mainContent = document.getElementById('mainContent');
+            const drugSearchInput = document.getElementById('drugSearchInput');
+            const beersTableBody = document.querySelector('#beersTable tbody');
+
+            const chapterOrder = navLinks.map(link => link.getAttribute('href'));
+
+            function updateContent(hash) {
+                let targetHash = hash || chapterOrder[0]; // Default to the first chapter in order
+                if (!chapterOrder.includes(targetHash)) {
+                    targetHash = chapterOrder[0];
+                }
+
+                contentSections.forEach(section => {
+                    const sectionNavContainer = section.querySelector('.chapter-nav-buttons');
+                    if (sectionNavContainer) sectionNavContainer.innerHTML = ''; // Clear old buttons
+
+                    if ('#' + section.id === targetHash) {
+                        section.classList.add('active');
+                        // Add Next/Prev buttons
+                        if (sectionNavContainer) {
+                            const currentIndex = chapterOrder.indexOf(targetHash);
+                            if (currentIndex > 0) {
+                                const prevButton = document.createElement('button');
+                                prevButton.innerHTML = '&larr; Previous Chapter';
+                                prevButton.className = 'px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200';
+                                prevButton.onclick = () => navigateToChapter(chapterOrder[currentIndex - 1]);
+                                sectionNavContainer.appendChild(prevButton);
+                            }
+                            if (currentIndex < chapterOrder.length - 1) {
+                                const nextButton = document.createElement('button');
+                                nextButton.innerHTML = 'Next Chapter &rarr;';
+                                nextButton.className = 'px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200 ml-auto';
+                                nextButton.onclick = () => navigateToChapter(chapterOrder[currentIndex + 1]);
+                                sectionNavContainer.appendChild(nextButton);
+                            }
+                        }
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    if (link.getAttribute('href') === targetHash) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+
+                // Scroll to top of main content area
+                mainContent.scrollTop = 0;
+                window.scrollTo(0,0); // Scroll whole page to top
+            }
+
+            function navigateToChapter(hash) {
+                history.pushState(null, null, hash);
+                updateContent(hash);
+                if (window.innerWidth <= 768) { // Close sidebar on mobile after navigation
+                    toggleSidebar(false);
+                }
+            }
+            
+            function toggleSidebar(forceState) {
+                const isActive = sidebar.classList.contains('active');
+                const show = forceState !== undefined ? forceState : !isActive;
+
+                if (show) {
+                    sidebar.classList.add('active');
+                    if (window.innerWidth > 768) { // Only adjust margin on desktop
+                        mainContent.classList.add('sidebar-active');
+                    }
+                } else {
+                    sidebar.classList.remove('active');
+                     if (window.innerWidth > 768) { // Only adjust margin on desktop
+                        mainContent.classList.remove('sidebar-active');
+                    }
+                }
+            }
+
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    navigateToChapter(this.getAttribute('href'));
+                });
+            });
+            
+            menuButton.addEventListener('click', () => toggleSidebar());
+            closeMenuButton.addEventListener('click', () => toggleSidebar(false));
+
+
+            // Close sidebar if clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+                    const isClickInsideSidebar = sidebar.contains(event.target);
+                    const isClickOnMenuButton = menuButton.contains(event.target);
+                    if (!isClickInsideSidebar && !isClickOnMenuButton) {
+                        toggleSidebar(false);
+                    }
+                }
+            });
+
+
+            window.addEventListener('popstate', function () {
+                updateContent(window.location.hash);
+            });
+
+            updateContent(window.location.hash);
+
+            // Drug Search for Chapter 10
+            if (drugSearchInput && beersTableBody) {
+                drugSearchInput.addEventListener('keyup', function () {
+                    const searchTerm = this.value.toLowerCase().trim();
+                    const rows = beersTableBody.querySelectorAll('tr');
+
+                    rows.forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        let match = false;
+                        if (cells.length > 0) {
+                            // Search in the first cell (Medication Class/Examples)
+                            const drugNameCell = cells[0].textContent.toLowerCase();
+                            if (drugNameCell.includes(searchTerm)) {
+                                match = true;
+                            }
+                        }
+                        
+                        // Remove previous highlights
+                        cells.forEach(cell => {
+                            // If we use a specific class for highlighted text within cell, clear that
+                            // For simplicity, we are highlighting the row, so this step is about row visibility
+                        });
+
+
+                        if (match) {
+                            row.style.display = '';
+                            row.classList.add('highlight-search');
+                        } else {
+                            row.style.display = searchTerm ? 'none' : ''; // Hide if search term exists and no match
+                            row.classList.remove('highlight-search');
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
