@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Drug Pricing Insights - Understanding Healthcare Costs</title>
+    <meta name="description" content="Discover insights into drug pricing, pharmacy challenges, and healthcare costs in the US. Explore our interactive guide to understand the high price of survival.">
+    <meta name="keywords" content="drug pricing, healthcare costs, pharmacy, PBMs, patient care, medical costs, affordable healthcare">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preload" href="resources/drug_pricing_spa_from_blog_v4.html" as="document">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdf6e3; /* A soft, warm background */
+            color: #333;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+        .hero-section {
+            position: relative;
+            display: flex;
+            flex-direction: column; /* Stack content vertically */
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh; /* Make hero section take up most of the viewport */
+            padding: 2rem 1.5rem;
+            text-align: center;
+            background-color: #ffffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-bottom-left-radius: 2rem;
+            border-bottom-right-radius: 2rem;
+            overflow: hidden; /* Hide overflowing slides */
+        }
+
+        /* Carousel specific styles */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px; /* Max width for carousel content */
+            height: 350px; /* Fixed height for carousel */
+            margin-bottom: 2rem; /* Space between carousel and CTA */
+            overflow: hidden;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .carousel-slide-wrapper {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-slide {
+            flex: 0 0 100%; /* Each slide takes full width of wrapper */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background-color: #e0f2fe; /* light blue background for slides */
+            color: #0c4a6e; /* dark blue text for slides */
+            text-align: center;
+        }
+        .carousel-slide h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #0284c7;
+            line-height: 1.2;
+        }
+        .carousel-slide p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-bottom: 1.5rem;
+        }
+        .carousel-slide a {
+            background-color: #0ea5e9;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        .carousel-slide a:hover {
+            background-color: #0284c7;
+        }
+
+        .carousel-nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+            z-index: 20;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+        .carousel-nav-button:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .carousel-nav-button.left-arrow { left: 1rem; }
+        .carousel-nav-button.right-arrow { right: 1rem; }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 20;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: white;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #0ea5e9; /* Sky-500 */
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px; /* Pill-shaped button */
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+            z-index: 10; /* Ensure button is above other elements */
+            position: relative;
+        }
+        .cta-button:hover {
+            background-color: #0284c7; /* Darker sky-600 on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(14, 165, 233, 0.4);
+        }
+
+        .section-container {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #0284c7;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .bio-text {
+            font-size: 1rem;
+            color: #444;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .article-card {
+            background-color: #f0f9ff; /* sky-50 */
+            border: 1px solid #e0f2fe; /* sky-100 */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: left;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        .article-card h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #0c4a6e; /* sky-800 */
+            margin-bottom: 0.75rem;
+        }
+        .article-card p {
+            font-size: 0.95rem;
+            color: #404040;
+            flex-grow: 1; /* Allow paragraph to take available space */
+        }
+        .article-card a {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #0ea5e9; /* sky-500 */
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        .article-card a:hover {
+            color: #0284c7; /* sky-600 */
+            text-decoration: underline;
+        }
+
+        /* Article Overlay Styles */
+        #articleOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden; /* Use visibility for smooth transition */
+            opacity: 0;
+            transition: visibility 0.3s, opacity 0.3s ease-in-out;
+        }
+        #articleOverlay.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+        #articleIframe {
+            width: 90%;
+            height: 90%;
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            background-color: white; /* Ensure iframe background is white */
+        }
+        #closeOverlayBtn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background-color: white;
+            color: #333;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.2s, color 0.2s;
+        }
+        #closeOverlayBtn:hover {
+            background-color: #f0f0f0;
+            color: #0284c7;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .carousel-slide h2 {
+                font-size: 1.8rem;
+            }
+            .carousel-slide p {
+                font-size: 1rem;
+            }
+            .hero-section {
+                min-height: 60vh;
+            }
+            .section-container {
+                margin: 2rem 1rem;
+                padding: 1.5rem;
+            }
+            .section-title {
+                font-size: 1.75rem;
+            }
+            .articles-grid {
+                grid-template-columns: 1fr; /* Stack topics on small screens */
+            }
+            #articleIframe {
+                width: 95%;
+                height: 95%;
+            }
+            #closeOverlayBtn {
+                top: 0.5rem;
+                right: 0.5rem;
+                width: 30px;
+                height: 30px;
+                font-size: 1.2rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .carousel-slide h2 {
+                font-size: 1.5rem;
+            }
+            .carousel-slide p {
+                font-size: 0.9rem;
+            }
+            .carousel-slide a {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            .hero-section {
+                min-height: 50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-section">
+        <div class="carousel-container">
+            <div class="carousel-slide-wrapper" id="carouselSlideWrapper">
+                </div>
+            <button id="prevSlide" class="carousel-nav-button left-arrow" aria-label="Previous Slide">&#8249;</button>
+            <button id="nextSlide" class="carousel-nav-button right-arrow" aria-label="Next Slide">&#8250;</button>
+            <div class="carousel-indicators" id="carouselIndicators"></div>
+        </div>
+        <a href="#articlesGrid" class="cta-button">
+            Explore All Articles
+        </a>
+    </div>
+
+    <div class="section-container">
+        <h2 class="section-title" id="articlesGrid">Explore Our Insights</h2>
+        <div class="articles-grid" id="articlesGridContent">
+            </div>
+    </div>
+
+    <div class="section-container" id="about-author">
+        <h2 class="section-title">About the Author</h2>
+        <p class="bio-text">
+            Sungjoon Jun, PharmD, is a dedicated healthcare professional with a passion for demystifying complex pharmaceutical and healthcare economics. With a Doctor of Pharmacy degree and years of experience in the field, Sungjoon combines clinical knowledge with a keen understanding of market dynamics to provide clear, insightful analysis on critical issues like drug pricing and pharmacy accessibility. His work aims to empower patients and healthcare stakeholders with the knowledge needed to navigate the evolving healthcare landscape.
+        </p>
+    </div>
+
+    <footer class="text-center py-8 text-sm text-neutral-600 bg-white mt-8 shadow-inner">
+        <p>&copy; 2024 Drug Pricing Insights. All rights reserved. Information for educational purposes only.</p>
+    </footer>
+
+    <div id="articleOverlay">
+        <button id="closeOverlayBtn" aria-label="Close Article">&times;</button>
+        <iframe id="articleIframe" src="" frameborder="0"></iframe>
+    </div>
+
+    <script>
+        // --- Article Data (Manually update this array for new articles) ---
+        const articlesData = [
+            {
+                title: "The High Price of Survival: Unpacking America’s Drug Cost Crisis",
+                summary: "Dive deep into the complex factors driving high prescription drug prices and the challenges facing local pharmacies in the United States.",
+                url: "resources/drug_pricing_spa_from_blog_v4.html"
+            },
+            {
+                title: "Understanding PBMs: The Hidden Middlemen",
+                summary: "A detailed look at how Pharmacy Benefit Managers operate and their impact on drug costs and pharmacy viability. This article provides a deeper dive into the opaque practices of PBMs.",
+                url: "resources/pbm_deep_dive.html" // Placeholder URL
+            },
+            {
+                title: "The Future of Community Pharmacies",
+                summary: "Exploring innovative models and policy changes that could help revitalize local pharmacies and ensure continued access to vital healthcare services in communities.",
+                url: "resources/pharmacy_future.html" // Placeholder URL
+            },
+             {
+                title: "Global Drug Pricing: A Comparative Analysis",
+                summary: "Compare drug pricing strategies and outcomes across different countries to understand international disparities and potential solutions.",
+                url: "resources/global_pricing_analysis.html" // Placeholder URL
+            }
+        ];
+
+        // --- Carousel Logic ---
+        const carouselSlideWrapper = document.getElementById('carouselSlideWrapper');
+        const prevSlideBtn = document.getElementById('prevSlide');
+        const nextSlideBtn = document.getElementById('nextSlide');
+        const carouselIndicators = document.getElementById('carouselIndicators');
+        let currentSlideIndex = 0;
+        let autoSlideInterval;
+
+        function renderCarouselSlides() {
+            carouselSlideWrapper.innerHTML = ''; // Clear existing slides
+            carouselIndicators.innerHTML = ''; // Clear existing indicators
+
+            articlesData.forEach((article, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.classList.add('carousel-slide');
+                slideDiv.innerHTML = `
+                    <h2>${article.title}</h2>
+                    <p>${article.summary}</p>
+                    <a href="${article.url}" class="article-link">Read More &rarr;</a>
+                `;
+                carouselSlideWrapper.appendChild(slideDiv);
+
+                const dot = document.createElement('span');
+                dot.classList.add('indicator-dot');
+                dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+                dot.addEventListener('click', () => {
+                    currentSlideIndex = index;
+                    updateCarouselPosition();
+                    resetAutoSlide();
+                });
+                carouselIndicators.appendChild(dot);
+            });
+            updateCarouselPosition();
+            updateIndicatorDots();
+        }
+
+        function updateCarouselPosition() {
+            const offset = -currentSlideIndex * 100;
+            carouselSlideWrapper.style.transform = `translateX(${offset}%)`;
+            updateIndicatorDots();
+        }
+
+        function updateIndicatorDots() {
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlideIndex);
+            });
+        }
+
+        function showNextSlide() {
+            currentSlideIndex = (currentSlideIndex + 1) % articlesData.length;
+            updateCarouselPosition();
+            resetAutoSlide();
+        }
+
+        function showPrevSlide() {
+            currentSlideIndex = (currentSlideIndex - 1 + articlesData.length) % articlesData.length;
+            updateCarouselPosition();
+            resetAutoSlide();
+        }
+
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(showNextSlide, 5000); // Change slide every 5 seconds
+        }
+
+        function resetAutoSlide() {
+            clearInterval(autoSlideInterval);
+            startAutoSlide();
+        }
+
+        // Event Listeners for carousel navigation
+        prevSlideBtn.addEventListener('click', showPrevSlide);
+        nextSlideBtn.addEventListener('click', showNextSlide);
+
+        // Keyboard navigation for carousel
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                showPrevSlide();
+            } else if (e.key === 'ArrowRight') {
+                showNextSlide();
+            }
+        });
+
+        // Initial render and start auto-slide
+        renderCarouselSlides();
+        startAutoSlide();
+
+        // --- Article Grid Logic ---
+        const articlesGridContent = document.getElementById('articlesGridContent');
+
+        function renderArticleTiles() {
+            articlesGridContent.innerHTML = ''; // Clear existing tiles
+            articlesData.forEach(article => {
+                const articleCard = document.createElement('div');
+                articleCard.classList.add('article-card');
+                articleCard.innerHTML = `
+                    <h3>${article.title}</h3>
+                    <p>${article.summary}</p>
+                    <a href="${article.url}" class="article-link">Learn More &rarr;</a>
+                `;
+                articlesGridContent.appendChild(articleCard);
+            });
+        }
+
+        // Initial render of article tiles
+        renderArticleTiles();
+
+        // --- Article Overlay Logic ---
+        const articleOverlay = document.getElementById('articleOverlay');
+        const articleIframe = document.getElementById('articleIframe');
+        const closeOverlayBtn = document.getElementById('closeOverlayBtn');
+
+        function openArticleOverlay(url) {
+            articleIframe.src = url;
+            articleOverlay.classList.add('visible');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling on main page
+        }
+
+        function closeArticleOverlay() {
+            articleOverlay.classList.remove('visible');
+            articleIframe.src = ''; // Clear iframe content
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+
+        // Event listener for all article links (carousel and grid)
+        document.addEventListener('click', function(event) {
+            const target = event.target;
+            // Check if the clicked element is an article link or a child of one
+            const articleLink = target.closest('.article-link');
+            if (articleLink) {
+                event.preventDefault(); // Prevent default link navigation
+                openArticleOverlay(articleLink.href);
+            }
+        });
+
+        closeOverlayBtn.addEventListener('click', closeArticleOverlay);
+
+        // Close overlay if escape key is pressed
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && articleOverlay.classList.contains('visible')) {
+                closeArticleOverlay();
+            }
+        });
+
+        // Smooth scroll for "Explore All Articles" button
+        document.querySelector('.hero-section .cta-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetElement = document.getElementById('articlesGrid');
+            if (targetElement) {
+                const headerOffset = 0; // No sticky header on this page
+                const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = elementPosition - headerOffset;
+                window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+            }
+        });
+    </script>
+</body>
+</html>
