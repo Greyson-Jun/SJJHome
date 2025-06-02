@@ -3,12 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Healthcare Contents Writing by Sungjoon Jun, PharmD</title>
-    <meta name="description" content="Discover insights into Drug use, drug pricing, pharmacy challenges, and healthcare costs in the US. Explore My interactive guide to better understand drugs.">
-    <meta name="keywords" content="drug pricing, healthcare costs, pharmacy, PBMs, patient care, medical costs, affordable healthcare, geriatric, medication guide, OTC">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preload" href="resources/Drug-Price.html" as="document">
+    <title>Welcome to Drug Pricing Insights - Understanding Healthcare Costs</title>
+    <meta name="description" content="Discover insights into drug pricing, pharmacy challenges, and healthcare costs in the US. Explore our interactive guide to understand the high price of survival.">
+    <meta name="keywords" content="drug pricing, healthcare costs, pharmacy, PBMs, patient care, medical costs, affordable healthcare">
+    <link rel="canonical" href="https://www.yourwebsite.com/index.html" /> <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.yourwebsite.com/index.html"> <meta property="og:title" content="Drug Pricing Insights - Unpacking Healthcare Costs">
+    <meta property="og:description" content="Explore insights into drug pricing, pharmacy challenges, and healthcare costs in the US.">
+    <meta property="og:image" content="https://www.yourwebsite.com/images/og-image.jpg"> <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.yourwebsite.com/index.html"> <meta property="twitter:title" content="Drug Pricing Insights - Unpacking Healthcare Costs">
+    <meta property="twitter:description" content="Explore insights into drug pricing, pharmacy challenges, and healthcare costs in the US.">
+    <meta property="twitter:image" content="https://www.yourwebsite.com/images/twitter-image.jpg"> <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preload" href="resources/drug_pricing_spa_from_blog_v4.html" as="document">
     <style>
+        :root {
+            --header-height: 60px; /* Default height */
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --header-height: 90px; /* Adjusted for stacked header */
+            }
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #fdf6e3; /* A soft, warm background */
@@ -18,14 +34,54 @@
             box-sizing: border-box;
             line-height: 1.6;
             overflow-x: hidden; /* Prevent horizontal scroll */
+            padding-top: var(--header-height); /* Space for fixed header */
+            scroll-snap-type: y mandatory; /* Enable vertical scroll snapping */
+            scroll-padding-top: var(--header-height); /* Offset for fixed header */
         }
-        .hero-section {
+        header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            height: var(--header-height); /* Ensure header height matches variable */
+        }
+        header nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 100%; /* Ensure nav fills header height */
+        }
+        .nav-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0284c7;
+            text-decoration: none;
+        }
+        .nav-links a {
+            color: #404040;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .nav-links a:hover {
+            background-color: #e0f2fe; /* sky-100 */
+            color: #0284c7; /* sky-600 */
+        }
+
+        .hero-section, .section-container {
             position: relative;
             display: flex;
             flex-direction: column; /* Stack content vertically */
             justify-content: center;
             align-items: center;
-            min-height: 70vh; /* Make hero section take up most of the viewport */
+            min-height: calc(100vh - var(--header-height)); /* Make sections fill remaining viewport */
             padding: 2rem 1.5rem;
             text-align: center;
             background-color: #ffffff;
@@ -33,6 +89,22 @@
             border-bottom-left-radius: 2rem;
             border-bottom-right-radius: 2rem;
             overflow: hidden; /* Hide overflowing slides */
+            scroll-snap-align: start; /* Snap to the top of the viewport */
+            opacity: 0; /* Start hidden for fade effect */
+            transform: translateY(20px); /* Start slightly below for slide effect */
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out; /* Smooth transition for fade and slide */
+        }
+        .section-container {
+            margin: 3.5rem auto; /* Increased vertical margin */
+            padding: 2.5rem; /* Increased padding */
+            border-radius: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Class to make section visible */
+        .section-visible {
+            opacity: 1;
+            transform: translateY(0); /* Move to original position */
         }
 
         /* Carousel specific styles */
@@ -41,10 +113,10 @@
             width: 100%;
             max-width: 800px; /* Max width for carousel content */
             height: 350px; /* Fixed height for carousel */
-            margin-bottom: 2rem; /* Space between carousel and CTA */
+            margin-bottom: 2.5rem; /* Increased space between carousel and CTA */
             overflow: hidden;
             border-radius: 1rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow */
         }
         .carousel-slide-wrapper {
             display: flex;
@@ -149,14 +221,6 @@
             box-shadow: 0 6px 15px rgba(14, 165, 233, 0.4);
         }
 
-        .section-container {
-            max-width: 900px;
-            margin: 3rem auto;
-            padding: 2rem;
-            background-color: #ffffff;
-            border-radius: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
         .section-title {
             font-size: 2rem;
             font-weight: 600;
@@ -174,7 +238,7 @@
         .articles-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+            gap: 1.75rem; /* Slightly increased gap */
             margin-top: 2rem;
         }
         .article-card {
@@ -190,7 +254,7 @@
         }
         .article-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
         }
         .article-card h3 {
             font-size: 1.15rem;
@@ -223,22 +287,53 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.85); /* Slightly darker overlay */
             display: flex;
+            flex-direction: column; /* Stack content vertically */
             justify-content: center;
             align-items: center;
             z-index: 1000;
             visibility: hidden; /* Use visibility for smooth transition */
             opacity: 0;
             transition: visibility 0.3s, opacity 0.3s ease-in-out;
+            padding: 1rem; /* Added padding for smaller screens */
+            box-sizing: border-box;
         }
         #articleOverlay.visible {
             visibility: visible;
             opacity: 1;
         }
+        #articleOverlay .overlay-header {
+            width: 90%;
+            max-width: 1200px; /* Limit header width to match iframe */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            color: #333;
+            padding: 0.75rem 1.5rem;
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1001; /* Ensure header is above iframe */
+            margin-bottom: -1px; /* Overlap with iframe border */
+            position: relative;
+        }
+        #articleOverlay .overlay-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #0284c7;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding-right: 2rem; /* Space for close button */
+        }
         #articleIframe {
             width: 90%;
             height: 90%;
+            max-width: 1200px; /* Max width for iframe */
+            max-height: 800px; /* Max height for iframe */
             border: none;
             border-radius: 1rem;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
@@ -246,29 +341,88 @@
         }
         #closeOverlayBtn {
             position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
+            top: 0.75rem;
+            right: 0.75rem;
             background-color: white;
             color: #333;
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 1.5rem;
+            width: 36px;
+            height: 36px;
+            font-size: 1.4rem;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.2s, color 0.2s;
+            transition: background-color 0.2s, color 0.2s, transform 0.2s;
+            z-index: 1002; /* Ensure close button is on top */
         }
         #closeOverlayBtn:hover {
             background-color: #f0f0f0;
             color: #0284c7;
+            transform: rotate(90deg); /* Small rotation for interaction */
+        }
+
+        /* Loading indicator for iframe */
+        .iframe-loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.2rem;
+            z-index: 1001; /* Above iframe, below close button */
+        }
+
+        /* Scroll down indicator */
+        #scrollDownIndicator {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+            z-index: 10;
+        }
+        #scrollDownIndicator::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-right: 2px solid white;
+            border-bottom: 2px solid white;
+            transform: rotate(45deg);
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
         }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
+            header nav {
+                flex-direction: column;
+                align-items: center;
+                padding: 0.5rem 1rem;
+            }
+            .nav-title {
+                margin-bottom: 0.5rem;
+            }
+            .nav-links a {
+                padding: 0.3rem 0.7rem;
+                font-size: 0.9rem;
+            }
+            body {
+                padding-top: var(--header-height); /* Adjust for stacked header on small screens */
+            }
             .carousel-slide h2 {
                 font-size: 1.8rem;
             }
@@ -276,9 +430,10 @@
                 font-size: 1rem;
             }
             .hero-section {
-                min-height: 60vh;
+                min-height: calc(100vh - var(--header-height));
             }
             .section-container {
+                min-height: calc(100vh - var(--header-height));
                 margin: 2rem 1rem;
                 padding: 1.5rem;
             }
@@ -292,12 +447,29 @@
                 width: 95%;
                 height: 95%;
             }
+            #articleOverlay .overlay-header {
+                width: 95%; /* Match iframe width */
+                padding: 0.5rem 1rem;
+            }
+            #articleOverlay .overlay-header h2 {
+                font-size: 1rem;
+                padding-right: 1.5rem;
+            }
             #closeOverlayBtn {
-                top: 0.5rem;
-                right: 0.5rem;
+                top: 0.25rem;
+                right: 0.25rem;
                 width: 30px;
                 height: 30px;
                 font-size: 1.2rem;
+            }
+            #scrollDownIndicator {
+                bottom: 1rem;
+                width: 25px;
+                height: 25px;
+            }
+            #scrollDownIndicator::after {
+                width: 8px;
+                height: 8px;
             }
         }
         @media (max-width: 480px) {
@@ -312,14 +484,25 @@
                 font-size: 0.9rem;
             }
             .hero-section {
-                min-height: 50vh;
+                min-height: calc(100vh - var(--header-height));
             }
         }
     </style>
 </head>
 <body>
+    <header>
+        <nav>
+            <a href="#" class="nav-title">Drug Pricing Insights</a>
+            <div class="nav-links">
+                <a href="#">Home</a>
+                <a href="#articlesGrid">Articles</a>
+                <a href="#about-author">About Author</a>
+            </div>
+        </nav>
+    </header>
+
     <div class="hero-section">
-        <div class="carousel-container">
+        <div class="carousel-container" id="carouselContainer">
             <div class="carousel-slide-wrapper" id="carouselSlideWrapper">
                 </div>
             <button id="prevSlide" class="carousel-nav-button left-arrow" aria-label="Previous Slide">&#8249;</button>
@@ -329,10 +512,11 @@
         <a href="#articlesGrid" class="cta-button">
             Explore All Articles
         </a>
+        <div id="scrollDownIndicator" aria-label="Scroll down to explore"></div>
     </div>
 
     <div class="section-container">
-        <h2 class="section-title" id="articlesGrid">Explore My Insights</h2>
+        <h2 class="section-title" id="articlesGrid">Explore Our Insights</h2>
         <div class="articles-grid" id="articlesGridContent">
             </div>
     </div>
@@ -340,17 +524,21 @@
     <div class="section-container" id="about-author">
         <h2 class="section-title">About the Author</h2>
         <p class="bio-text">
-            Sungjoon Jun, PharmD, is a dedicated healthcare professional with a passion for demystifying complex pharmaceutical and healthcare economics. With a Doctor of Pharmacy degree and years of experience in the field, Sungjoon combines clinical knowledge with a keen understanding of market dynamics to provide clear, insightful analysis on critical issues like drug pricing, uses, and pharmacy accessibility. His work aims to empower patients and healthcare stakeholders with the knowledge needed to navigate the evolving healthcare landscape.
+            Sungjoon Jun, PharmD, is a dedicated healthcare professional with a passion for demystifying complex pharmaceutical and healthcare economics. With a Doctor of Pharmacy degree and years of experience in the field, Sungjoon combines clinical knowledge with a keen understanding of market dynamics to provide clear, insightful analysis on critical issues like drug pricing and pharmacy accessibility. His work aims to empower patients and healthcare stakeholders with the knowledge needed to navigate the evolving healthcare landscape.
         </p>
     </div>
 
     <footer class="text-center py-8 text-sm text-neutral-600 bg-white mt-8 shadow-inner">
-        <p>&copy; 2025 Sungjoon Jun. All rights reserved. Information for educational purposes only.</p>
+        <p>&copy; 2024 Drug Pricing Insights. All rights reserved. Information for educational purposes only.</p>
     </footer>
 
     <div id="articleOverlay">
-        <button id="closeOverlayBtn" aria-label="Close Article">&times;</button>
-        <iframe id="articleIframe" src="" frameborder="0"></iframe>
+        <div class="overlay-header">
+            <h2 id="overlayArticleTitle"></h2>
+            <button id="closeOverlayBtn" aria-label="Close Article">&times;</button>
+        </div>
+        <div class="iframe-loading-indicator" id="iframeLoadingIndicator">Loading...</div>
+        <iframe id="articleIframe" src="" frameborder="0" loading="lazy"></iframe>
     </div>
 
     <script>
@@ -359,12 +547,22 @@
             {
                 title: "The High Price of Survival: Unpacking America’s Drug Cost Crisis",
                 summary: "Dive deep into the complex factors driving high prescription drug prices and the challenges facing local pharmacies in the United States.",
-                url: "resources/Drug-Price.html"
+                url: "resources/drug_pricing_spa_from_blog_v4.html"
             },
             {
-                title: "Geriatric And Drugs",
-                summary: "The healthcare journey for older adults is often complex, frequently involving multiple chronic conditions that require numerous medications. This use of multiple medications, known as polypharmacy, creates significant hurdles in managing health safely and effectively, impacting overall well-being.",
-                url: "resources/Geriatric.html" // Placeholder URL
+                title: "Understanding PBMs: The Hidden Middlemen",
+                summary: "A detailed look at how Pharmacy Benefit Managers operate and their impact on drug costs and pharmacy viability. This article provides a deeper dive into the opaque practices of PBMs.",
+                url: "resources/pbm_deep_dive.html" // Placeholder URL
+            },
+            {
+                title: "The Future of Community Pharmacies",
+                summary: "Exploring innovative models and policy changes that could help revitalize local pharmacies and ensure continued access to vital healthcare services in communities.",
+                url: "resources/pharmacy_future.html" // Placeholder URL
+            },
+             {
+                title: "Global Drug Pricing: A Comparative Analysis",
+                summary: "Compare drug pricing strategies and outcomes across different countries to understand international disparities and potential solutions.",
+                url: "resources/global_pricing_analysis.html" // Placeholder URL
             }
         ];
 
@@ -373,6 +571,7 @@
         const prevSlideBtn = document.getElementById('prevSlide');
         const nextSlideBtn = document.getElementById('nextSlide');
         const carouselIndicators = document.getElementById('carouselIndicators');
+        const carouselContainer = document.getElementById('carouselContainer'); // Get carousel container
         let currentSlideIndex = 0;
         let autoSlideInterval;
 
@@ -383,10 +582,11 @@
             articlesData.forEach((article, index) => {
                 const slideDiv = document.createElement('div');
                 slideDiv.classList.add('carousel-slide');
+                // Use data-url and data-title for article links
                 slideDiv.innerHTML = `
                     <h2>${article.title}</h2>
                     <p>${article.summary}</p>
-                    <a href="${article.url}" class="article-link">Read More &rarr;</a>
+                    <a href="#" class="article-link" data-url="${article.url}" data-title="${article.title}">Read More &rarr;</a>
                 `;
                 carouselSlideWrapper.appendChild(slideDiv);
 
@@ -419,13 +619,11 @@
         function showNextSlide() {
             currentSlideIndex = (currentSlideIndex + 1) % articlesData.length;
             updateCarouselPosition();
-            resetAutoSlide();
         }
 
         function showPrevSlide() {
             currentSlideIndex = (currentSlideIndex - 1 + articlesData.length) % articlesData.length;
             updateCarouselPosition();
-            resetAutoSlide();
         }
 
         function startAutoSlide() {
@@ -438,15 +636,21 @@
         }
 
         // Event Listeners for carousel navigation
-        prevSlideBtn.addEventListener('click', showPrevSlide);
-        nextSlideBtn.addEventListener('click', showNextSlide);
+        prevSlideBtn.addEventListener('click', () => { showPrevSlide(); resetAutoSlide(); });
+        nextSlideBtn.addEventListener('click', () => { showNextSlide(); resetAutoSlide(); });
+
+        // Pause/Resume auto-slide on hover
+        carouselContainer.addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
+        carouselContainer.addEventListener('mouseleave', startAutoSlide);
 
         // Keyboard navigation for carousel
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') {
                 showPrevSlide();
+                resetAutoSlide();
             } else if (e.key === 'ArrowRight') {
                 showNextSlide();
+                resetAutoSlide();
             }
         });
 
@@ -462,10 +666,11 @@
             articlesData.forEach(article => {
                 const articleCard = document.createElement('div');
                 articleCard.classList.add('article-card');
+                // Use data-url and data-title for article links
                 articleCard.innerHTML = `
                     <h3>${article.title}</h3>
                     <p>${article.summary}</p>
-                    <a href="${article.url}" class="article-link">Learn More &rarr;</a>
+                    <a href="#" class="article-link" data-url="${article.url}" data-title="${article.title}">Learn More &rarr;</a>
                 `;
                 articlesGridContent.appendChild(articleCard);
             });
@@ -478,9 +683,14 @@
         const articleOverlay = document.getElementById('articleOverlay');
         const articleIframe = document.getElementById('articleIframe');
         const closeOverlayBtn = document.getElementById('closeOverlayBtn');
+        const overlayArticleTitle = document.getElementById('overlayArticleTitle');
+        const iframeLoadingIndicator = document.getElementById('iframeLoadingIndicator');
 
-        function openArticleOverlay(url) {
+
+        function openArticleOverlay(url, title) {
+            overlayArticleTitle.textContent = title; // Set the title in the overlay header
             articleIframe.src = url;
+            iframeLoadingIndicator.style.display = 'block'; // Show loading indicator
             articleOverlay.classList.add('visible');
             document.body.style.overflow = 'hidden'; // Prevent scrolling on main page
         }
@@ -488,7 +698,9 @@
         function closeArticleOverlay() {
             articleOverlay.classList.remove('visible');
             articleIframe.src = ''; // Clear iframe content
+            overlayArticleTitle.textContent = ''; // Clear title
             document.body.style.overflow = ''; // Restore scrolling
+            iframeLoadingIndicator.style.display = 'none'; // Hide loading indicator
         }
 
         // Event listener for all article links (carousel and grid)
@@ -498,11 +710,18 @@
             const articleLink = target.closest('.article-link');
             if (articleLink) {
                 event.preventDefault(); // Prevent default link navigation
-                openArticleOverlay(articleLink.href);
+                const url = articleLink.dataset.url;
+                const title = articleLink.dataset.title;
+                openArticleOverlay(url, title);
             }
         });
 
         closeOverlayBtn.addEventListener('click', closeArticleOverlay);
+
+        // Hide loading indicator once iframe content is loaded
+        articleIframe.onload = function() {
+            iframeLoadingIndicator.style.display = 'none';
+        };
 
         // Close overlay if escape key is pressed
         document.addEventListener('keydown', function(event) {
@@ -511,17 +730,77 @@
             }
         });
 
-        // Smooth scroll for "Explore All Articles" button
+        // Smooth scroll for "Explore All Articles" button and scroll-down indicator
         document.querySelector('.hero-section .cta-button').addEventListener('click', function(e) {
             e.preventDefault();
             const targetElement = document.getElementById('articlesGrid');
             if (targetElement) {
-                const headerOffset = 0; // No sticky header on this page
+                const headerOffset = document.querySelector('header').offsetHeight; // Get header height
                 const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
                 const offsetPosition = elementPosition - headerOffset;
                 window.scrollTo({ top: offsetPosition, behavior: "smooth" });
             }
         });
+
+        document.getElementById('scrollDownIndicator').addEventListener('click', function() {
+            const targetElement = document.getElementById('articlesGrid');
+            if (targetElement) {
+                const headerOffset = document.querySelector('header').offsetHeight; // Get header height
+                const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = elementPosition - headerOffset;
+                window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+            }
+        });
+
+        // Smooth scrolling for navigation links in the header
+        document.querySelectorAll('header .nav-links a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetHref = this.getAttribute('href');
+                const hash = targetHref.startsWith('#') ? targetHref.substring(1) : '';
+
+                if (hash) { // Internal hash on the same page
+                    e.preventDefault();
+                    const targetElement = document.getElementById(hash);
+                    if (targetElement) {
+                        const headerOffset = document.querySelector('header').offsetHeight;
+                        const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                        const offsetPosition = elementPosition - headerOffset;
+                        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    }
+                } else if (targetHref === '#') { // Home link, scroll to top
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in/fade-out effect
+        const sections = document.querySelectorAll('.hero-section, .section-container');
+
+        const observerOptions = {
+            root: null, // viewport
+            rootMargin: '0px',
+            threshold: 0.5 // Trigger when 50% of the section is visible
+        };
+
+        const sectionObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('section-visible');
+                } else {
+                    entry.target.classList.remove('section-visible');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            sectionObserver.observe(section);
+        });
+
+        // Make the first section visible immediately on load
+        if (sections.length > 0) {
+            sections[0].classList.add('section-visible');
+        }
     </script>
 </body>
 </html>
