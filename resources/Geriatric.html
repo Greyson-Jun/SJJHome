@@ -10,122 +10,38 @@
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
-            overflow-x: hidden; /* Prevent horizontal scroll when sidebar slides */
+            overflow-x: hidden; 
+            padding-bottom: 3rem; 
         }
-        .content-section {
-            display: none;
-        }
-        .content-section.active {
-            display: block;
-        }
-        .nav-link.active {
-            background-color: #4F46E5; /* indigo-600 */
-            color: white;
-        }
-        .key-takeaways {
-            background-color: #EEF2FF; /* indigo-50 */
-            border-left: 4px solid #4F46E5; /* indigo-600 */
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            border-radius: 0.375rem; /* rounded-md */
-        }
-        .key-takeaways h4 {
-            font-weight: 600;
-            color: #3730A3; /* indigo-800 */
-            margin-bottom: 0.5rem;
-        }
-        .did-you-know {
-            background-color: #F0FDF4; /* green-50 */
-            border-left: 4px solid #22C55E; /* green-500 */
-            padding: 1rem;
-            margin-top: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-radius: 0.375rem; /* rounded-md */
-        }
-        .did-you-know h4 {
-            font-weight: 600;
-            color: #15803D; /* green-700 */
-            margin-bottom: 0.5rem;
-        }
-        table {
-            width: 100%;
-            margin-bottom: 1.5rem;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #D1D5DB; /* gray-300 */
-            padding: 0.75rem;
-            text-align: left;
-            vertical-align: top;
-        }
-        th {
-            background-color: #F3F4F6; /* gray-100 */
-            font-weight: 600;
-        }
-        .search-match-text { /* Class for specific text highlighting within a cell */
-            background-color: #FDE047; /* yellow-400 */
-            font-weight: bold;
-            border-radius: 2px;
-            padding: 0.1em;
-        }
-        .table-search-input {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #D1D5DB; /* gray-300 */
-            border-radius: 0.375rem; /* rounded-md */
-            margin-bottom: 1rem;
-            box-sizing: border-box;
-        }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .nav-link.active { background-color: #4F46E5; color: white; }
+        .key-takeaways { background-color: #EEF2FF; border-left: 4px solid #4F46E5; padding: 1rem; margin-bottom: 1.5rem; border-radius: 0.375rem; }
+        .key-takeaways h4 { font-weight: 600; color: #3730A3; margin-bottom: 0.5rem; }
+        .did-you-know { background-color: #F0FDF4; border-left: 4px solid #22C55E; padding: 1rem; margin-top: 1.5rem; margin-bottom: 1.5rem; border-radius: 0.375rem; }
+        .did-you-know h4 { font-weight: 600; color: #15803D; margin-bottom: 0.5rem; }
+        table { width: 100%; margin-bottom: 1.5rem; border-collapse: collapse; }
+        th, td { border: 1px solid #D1D5DB; padding: 0.75rem; text-align: left; vertical-align: top; }
+        th { background-color: #F3F4F6; font-weight: 600; }
+        .search-match-text { background-color: #FDE047; font-weight: bold; border-radius: 2px; padding: 0.1em; }
+        .table-search-input { width: 100%; padding: 0.5rem; border: 1px solid #D1D5DB; border-radius: 0.375rem; margin-bottom: 1rem; box-sizing: border-box; }
+        /* .global-search-container { padding: 1rem 0; margin-bottom: 1rem; } REMOVED */
 
-        .sidebar {
-            transition: transform 0.3s ease-in-out;
-            transform: translateX(-100%); /* Hidden by default */
-            z-index: 40; 
-            width: 18rem; /* w-72 */
-        }
-        .sidebar.active {
-            transform: translateX(0);
-        }
-        .main-content-area {
-            transition: margin-left 0.3s ease-in-out;
-            width: 100%;
-        }
+        .sidebar { transition: transform 0.3s ease-in-out; transform: translateX(-100%); z-index: 40; width: 18rem; }
+        .sidebar.active { transform: translateX(0); }
+        .main-content-area { transition: margin-left 0.3s ease-in-out; width: 100%; }
 
-        @media (min-width: 769px) { /* md breakpoint + 1px */
-            .sidebar.active {
-                /* Stays transformed for push effect */
-            }
-            .main-content-area.sidebar-active {
-                margin-left: 18rem; /* Push content */
-            }
+        @media (min-width: 769px) {
+            .main-content-area.sidebar-active { margin-left: 18rem; }
         }
-        @media (max-width: 768px) { /* md breakpoint */
-            .sidebar {
-                width: 280px; /* Fixed width for mobile overlay */
-                position: fixed;
-                left:0; top:0; bottom:0;
-            }
-            .main-content-area.sidebar-active {
-                margin-left: 0; /* No push on mobile, sidebar overlays */
-            }
-            .menu-button-container {
-                padding: 1rem;
-            }
+        @media (max-width: 768px) {
+            .sidebar { width: 280px; position: fixed; left:0; top:0; bottom:0; }
+            .main-content-area.sidebar-active { margin-left: 0; }
+            .menu-button-container { padding: 1rem; }
         }
-        .chapter-nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid #E5E7EB; /* gray-200 */
-        }
-        .page-subtitle {
-            font-size: 0.875rem; /* text-sm */
-            color: #4B5563; /* gray-600 */
-            margin-top: 0.5rem;
-            margin-bottom: 1.5rem; /* Add some space before content or nav buttons */
-            text-align: center;
-        }
+        .chapter-nav-buttons { display: flex; justify-content: space-between; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #E5E7EB; }
+        .page-subtitle { font-size: 0.875rem; color: #4B5563; margin-top: 0.25rem; margin-bottom: 1rem; text-align: center; }
+        .chapter-footer-subtitle { font-size: 0.875rem; color: #4B5563; margin-top: 2rem; margin-bottom: 1rem; text-align: center; }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -135,9 +51,7 @@
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold">Guide Sections</h2>
                 <button id="closeMenuButton" class="text-white hover:text-gray-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                     <span class="sr-only">Close Menu</span>
                 </button>
             </div>
@@ -164,16 +78,16 @@
         <main id="mainContent" class="main-content-area flex-1 md:p-10">
             <div class="menu-button-container p-4 sticky top-0 bg-gray-100 md:bg-transparent z-30">
                  <button id="menuButton" class="p-2 text-gray-700 hover:text-indigo-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
                     <span class="sr-only">Open Menu</span>
                 </button>
             </div>
-             <div class="p-4 pt-0 md:p-0">
-                <header class="mb-8 text-center md:text-left">
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Geriatric Medication Guide</h1>
+             <div id="scrollableContent" class="p-4 pt-0 md:p-0"> 
+                <header class="mb-4 text-center md:text-left"> <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Geriatric Medication Guide</h1>
                 </header>
+                <!-- Global Search Container REMOVED
+                <div class="global-search-container px-0 md:px-0"> <input type="text" id="globalSearchInput" class="table-search-input" placeholder="Global Table Search (affects Ch 2, 8, 9, 10)...">
+                </div> -->
 
                 <section id="introduction" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
                     <h2 class="text-2xl font-semibold mb-2 text-indigo-700">Introduction: Navigating Medications and Supplements in Older Adulthood</h2>
@@ -249,7 +163,7 @@
                         <li><strong>Dietary Adjustments:</strong> Some individuals find chamomile tea, warm milk, or tart cherry juice helpful for promoting sleep.</li>
                     </ul>
                     <p>Utilizing these non-drug strategies can significantly improve sleep for older adults, often more effectively and safely than medication.</p>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
 
@@ -298,7 +212,7 @@
                         </table>
                     </div>
                     <p><em>Note: This table is not all-inclusive. Always consult a healthcare provider for personalized advice.</em></p>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
 
@@ -334,7 +248,7 @@
                         <li><strong>Buy in Bulk/Mail-Order:</strong> Mail-order pharmacies might offer larger supplies for less money. Many pharmacies and health plans offer home delivery for prescriptions. Some services ship medications already sorted into daily packets, which can replace traditional pill organizers and eliminate trips to pick up refills.</li>
                         <li><strong>Talk to Your Doctor/Pharmacist:</strong> If cost is an issue, inform them. They may be aware of cheaper alternatives or assistance programs.</li>
                     </ul>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
 
@@ -410,7 +324,7 @@
                         <li><strong>Delivery & Refills:</strong> Utilize pharmacy delivery and automatic refills.</li>
                         <li><strong>Free Informational Websites:</strong> Resources like the National Institute on Aging (NIA), MedlinePlus (National Library of Medicine), and NCCIH (National Center for Complementary and Integrative Health) offer valuable information.</li>
                     </ul>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
 
@@ -467,7 +381,7 @@
                         <li><strong>Cost Implications:</strong> Without insurance coverage, the brand-name medicine will be significantly more expensive out-of-pocket. Insurance plans often have formulary tiers, with generics in Tier 1 (lowest cost) and brands in higher, more expensive tiers. Some plans may not cover a brand at all if a generic alternative exists, barring exceptional medical necessity. If paying out-of-pocket for a brand-name drug, check if the manufacturer offers patient assistance programs or discount coupons, though Medicare and Medicaid patients are usually ineligible for manufacturer coupons due to federal rules.</li>
                     </ol>
                     <p><strong>Bottom line:</strong> For most people, generic medicines are equally effective as brand-names and offer substantial cost savings. If you believe a brand drug is better for you, discuss it thoroughly with your doctor, weighing any perceived benefits against the likely higher cost and insurance hurdles. In many instances, a trial period may show that the generic performs just as well. For example, Tylenol (brand) and acetaminophen (generic) are the same drug; the generic simply costs less.</p>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
 
@@ -562,7 +476,7 @@
                         </li>
                     </ol>
                     <p><strong>Never share controlled substances.</strong></p>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
 
@@ -602,7 +516,7 @@
                         <li>Enhance communication between patient and provider.</li>
                     </ul>
                     <p>Always bring all your medication bottles or a complete, updated list to your appointments.</p>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
 
@@ -662,7 +576,7 @@
                         <li><strong>Injectable Medications:</strong> Some medications can be given by injection, sometimes with less frequent dosing schedules.</li>
                     </ul>
                     <p>Communicating swallowing issues to your healthcare provider is key to finding a safe and effective solution.</p>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
 
@@ -751,7 +665,7 @@
                         <li>If you start to feel <strong>extremely unwell after taking any medication</strong> (OTC or prescription), including mental confusion, difficulty walking, or any severe, out-of-the-ordinary symptom. Medication effects can sometimes be more pronounced in older adults.</li>
                     </ul>
                     <p class="mb-4">Don't downplay symptoms because you don't want to be a bother. It’s always okay to call your physician’s office and ask for guidance on whether to go to urgent care or the ER. Keep a phone nearby in case you need to call for help.</p>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
 
@@ -786,7 +700,7 @@
                         </table>
                     </div>
                     <p><em>Note: This list is not exhaustive and is a summary. Always consult the most current version of the AGS Beers Criteria® and discuss medication choices with your healthcare provider.</em></p>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
 
@@ -815,7 +729,7 @@
                         <li>Practice good hygiene, such as regular hand-washing and proper wound care, to help prevent infections in the first place.</li>
                     </ul>
                     <p>By using antibiotics responsibly, you protect your own health and help ensure these vital medications remain effective for future generations.</p>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
 
@@ -831,7 +745,7 @@
                         <li><strong>NIH Health Information:</strong> (<a href="https://health.nih.gov" target="_blank" class="text-indigo-600 hover:underline">health.nih.gov</a>) Directs to various National Institutes of Health resources (e.g., National Cancer Institute, National Institute on Aging).</li>
                     </ul>
                     <p><strong>Note:</strong> Online information is general, not a substitute for professional medical advice. Consult your provider for any health decisions.</p>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
 
@@ -841,7 +755,7 @@
                     <p class="mb-4">Furthermore, knowing how to handle and properly dispose of medications, especially controlled substances, is vital for individual and public safety. Regular, comprehensive medication reviews with healthcare providers are necessary to combat the risks of polypharmacy and optimize therapeutic outcomes.</p>
                     <p class="mb-4">This is a collaborative effort. Healthcare providers, including doctors and pharmacists, need to personalize care, educate patients thoroughly, and regularly review medication regimens. Patients and their caregivers, in turn, must feel empowered to ask questions, be aware of potential risks and benefits, and actively participate in all decisions regarding medication therapy.</p>
                     <p>By working together, we can achieve safer and more effective medication use, leading to better health outcomes and an improved quality of life for older adults. Being informed is empowering—it helps individuals use medications safely, avoid common pitfalls, and seek the right help when needed.</p>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
 
@@ -875,13 +789,13 @@
                         <li><strong>Sublingual (SL):</strong> Medication dissolved under tongue.</li>
                         <li><strong>Withdrawal Symptoms:</strong> Unpleasant feelings when stopping a medicine.</li>
                     </ul>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
 
                 <section id="references" class="content-section bg-white p-6 rounded-lg shadow-lg mb-8">
                     <h2 class="text-2xl font-semibold mb-4 text-indigo-700">References</h2>
-                    <p class="mb-2 text-sm text-gray-600"></p>
+                    <p class="mb-2 text-sm text-gray-600">The following references are based on APA 7th edition guidelines, filtered. (n.d.) indicates no date was provided.</p>
                     <ul class="space-y-2 text-xs break-words">
                         <li>Administration for Community Living. (n.d.). *Managing medications for older adults*. Acl.gov.</li>
                         <li>American Academy of Family Physicians. (2018). *Trouble swallowing pills? Try these tips*. Familydoctor.org.</li>
@@ -962,15 +876,12 @@
                         <li>U.S. Food and Drug Administration. (n.d.). *Disposal of unused medicines: What you should know*. Fda.gov.</li>
                         <li>U.S. Government. (n.d.). *National Center for Complementary and Integrative Health (NCCIH)*. Usa.gov.</li>
                     </ul>
-                    <p class="page-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
+                    <p class="chapter-footer-subtitle">Geriatric and Drugs by Sungjoon Jun, PharmD</p>
                     <div class="chapter-nav-buttons"></div>
                 </section>
             </div>
         </main>
     </div>
-    <footer class="text-center p-4 bg-gray-200 text-gray-700 text-sm fixed bottom-0 left-0 right-0 z-50">
-        Geriatric and Drugs by Sungjoon Jun, PharmD
-    </footer>
 
     <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -980,8 +891,25 @@
         const menuButton = document.getElementById('menuButton');
         const closeMenuButton = document.getElementById('closeMenuButton');
         const mainContentArea = document.getElementById('mainContent');
+        const scrollableContentDiv = document.getElementById('scrollableContent');
+        // Global Search Input REMOVED const globalSearchInput = document.getElementById('globalSearchInput');
 
         const chapterOrder = navLinks.map(link => link.getAttribute('href'));
+        
+        const searchableTables = ['tableCh2', 'tableCh8', 'tableCh9', 'tableCh10'];
+        const originalTableData = {};
+
+        searchableTables.forEach(tableId => {
+            const table = document.getElementById(tableId);
+            if (table) {
+                const tbody = table.querySelector('tbody');
+                if (tbody) {
+                    originalTableData[tableId] = Array.from(tbody.querySelectorAll('tr')).map(row => {
+                        return Array.from(row.querySelectorAll('td')).map(td => td.innerHTML);
+                    });
+                }
+            }
+        });
 
         function updateContent(hash) {
             let targetHash = hash || chapterOrder[0];
@@ -1021,12 +949,10 @@
                 link.classList.toggle('active', link.getAttribute('href') === targetHash);
             });
             
-            // Adjust main content scroll, not window, to keep header/menu button in place
-             if (mainContentArea.querySelector('.p-4.pt-0')) {
-                mainContentArea.querySelector('.p-4.pt-0').scrollTop = 0;
-            } else {
-                 mainContentArea.scrollTop = 0;
+            if (scrollableContentDiv) {
+                scrollableContentDiv.scrollTop = 0;
             }
+            window.scrollTo(0, 0);
         }
 
         function navigateToChapter(hash) {
@@ -1040,10 +966,9 @@
         function toggleSidebar(forceState) {
             const show = forceState !== undefined ? forceState : !sidebar.classList.contains('active');
             sidebar.classList.toggle('active', show);
-            if (window.innerWidth > 768) { // Desktop: push content
+            if (window.innerWidth > 768) { 
                 mainContentArea.classList.toggle('sidebar-active', show);
             }
-            // On mobile, sidebar overlays, no margin change needed for mainContentArea
         }
 
         navLinks.forEach(link => {
@@ -1065,74 +990,85 @@
         });
 
         window.addEventListener('popstate', () => updateContent(window.location.hash));
-        // Initialize sidebar state based on screen size (hidden by default)
-        toggleSidebar(false); // Ensure it's hidden initially
+        toggleSidebar(false); 
         updateContent(window.location.hash);
 
-
         function escapeRegExp(string) {
-            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
 
-        function highlightTextInCell(cell, searchTerm) {
-            const originalText = cell.textContent;
+        function highlightTextInCell(cell, searchTerm, originalCellHTML) {
             if (!searchTerm) {
-                cell.innerHTML = originalText; // Reset if search term is empty
-                return;
+                cell.innerHTML = originalCellHTML; 
+                return false; 
             }
+            const cellText = cell.textContent; 
             const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
-            cell.innerHTML = originalText.replace(regex, `<span class="search-match-text">$1</span>`);
+            
+            if (cellText.toLowerCase().includes(searchTerm.toLowerCase())) {
+                cell.innerHTML = originalCellHTML.replace(regex, `<span class="search-match-text">$1</span>`);
+                return true; 
+            }
+            cell.innerHTML = originalCellHTML; 
+            return false;
         }
 
+        function filterTable(tableBody, searchTerm, tableId) {
+            const rows = tableBody.querySelectorAll('tr');
+            const specificOriginalData = originalTableData[tableId];
 
-        function setupTableSearch(inputId, tableId, columnIndexToSearch = 0) {
+            rows.forEach((row, rowIndex) => {
+                let matchFoundInRow = false;
+                const cells = row.querySelectorAll('td');
+
+                cells.forEach((cell, cellIndex) => {
+                    // Ensure originalCells exists and has the current cellIndex
+                    if (specificOriginalData && specificOriginalData[rowIndex] && specificOriginalData[rowIndex][cellIndex] !== undefined) {
+                        const originalCellHTML = specificOriginalData[rowIndex][cellIndex];
+                         if (highlightTextInCell(cell, searchTerm, originalCellHTML)) {
+                            matchFoundInRow = true;
+                        }
+                    } else { // Fallback if original data is not perfectly aligned (should not happen with current setup)
+                        const cellText = cell.textContent.toLowerCase();
+                        if (searchTerm && cellText.includes(searchTerm)) {
+                            matchFoundInRow = true;
+                            // Basic highlighting if original HTML is missing for some reason
+                            const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
+                            cell.innerHTML = cell.textContent.replace(regex, `<span class="search-match-text">$1</span>`);
+                        } else if (!searchTerm) {
+                             // If search term is empty, cell.innerHTML should already be original due to earlier reset
+                        }
+                    }
+                });
+
+                if (matchFoundInRow || !searchTerm) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        
+        function setupLocalTableSearch(inputId, tableId) {
             const searchInput = document.getElementById(inputId);
             const table = document.getElementById(tableId);
             if (!searchInput || !table) return;
             const tableBody = table.querySelector('tbody');
             if (!tableBody) return;
-            const originalRowsHTML = Array.from(tableBody.querySelectorAll('tr')).map(row => row.innerHTML);
 
-
-            searchInput.addEventListener('keyup', function () {
-                const searchTerm = this.value.toLowerCase().trim();
-                const rows = tableBody.querySelectorAll('tr');
-
-                rows.forEach((row, rowIndex) => {
-                    // Reset row to original state before applying new search
-                    row.innerHTML = originalRowsHTML[rowIndex];
-                    row.classList.remove('highlight-search');
-                    row.style.display = ''; // Make sure it's visible before checking match
-
-                    if (!searchTerm) {
-                        return; // If search term is empty, show all rows, no highlight
-                    }
-
-                    const cell = row.querySelectorAll('td')[columnIndexToSearch];
-                    let matchFound = false;
-                    if (cell) {
-                        const cellText = cell.textContent.toLowerCase();
-                        if (cellText.includes(searchTerm)) {
-                            matchFound = true;
-                            highlightTextInCell(cell, searchTerm); // Highlight specific text
-                        }
-                    }
-                    
-                    if (matchFound) {
-                        row.style.display = '';
-                        // No need to add highlight-search to row if highlighting text in cell
-                        // row.classList.add('highlight-search'); // Or highlight entire row
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
+            searchInput.addEventListener('input', function () { 
+                // Global search input is removed, so no need to clear it.
+                filterTable(tableBody, this.value, tableId);
             });
         }
 
-        setupTableSearch('searchTableCh2', 'tableCh2', 0);
-        setupTableSearch('searchTableCh8', 'tableCh8', 0);
-        setupTableSearch('searchTableCh9', 'tableCh9', 0);
-        setupTableSearch('searchTableCh10', 'tableCh10', 0);
+        // Global Search Logic REMOVED
+        // if (globalSearchInput) { ... }
+
+        setupLocalTableSearch('searchTableCh2', 'tableCh2');
+        setupLocalTableSearch('searchTableCh8', 'tableCh8');
+        setupLocalTableSearch('searchTableCh9', 'tableCh9'); 
+        setupLocalTableSearch('searchTableCh10', 'tableCh10');
     });
     </script>
 </body>
